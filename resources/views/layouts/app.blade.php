@@ -48,7 +48,7 @@
         <a class="nav-link {{ Request::is('vpn') ? 'active' : '' }}" href="{{ route('vpn') }}">Услуги</a>
       </li>
     <li class="nav-item">
-        <a class="nav-link {{ Request::is('ptarifs') ? 'active' : '' }}" href="{{ route('ptarifs') }}">Тарифы и стоимость</a>
+        <a class="nav-link {{ Request::is('tarifs') ? 'active' : '' }}" href="{{ route('tarifs') }}">Тарифы и стоимость</a>
       </li>
                     </ul>
 

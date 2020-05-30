@@ -3,15 +3,9 @@
 namespace BoostNet\Http\Controllers;
 
 use Illuminate\Http\Request;
-use BoostNet\Server;
 
 class SpeedTestController extends Controller
 {
-    public function main()
-    {
-        $server= Server::where('status','1')->get();
-        return view('welcome')->withData($server);
-    }
     public function emptyResponse(){
         header( "HTTP/1.1 200 OK" );
         header('Access-Control-Allow-Origin: *');

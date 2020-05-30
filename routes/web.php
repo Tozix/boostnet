@@ -12,7 +12,7 @@
 */
 
 
-Route::get('/', 'SpeedTestController@main')->name('main');
+
 
 Route::get('/faq', function () {
     return view('faq');
@@ -48,6 +48,9 @@ Route::get('/bower', function () {
     return view('services.bower');
 })->name('bower');
 
+//Контент роуты
+Route::get('/', 'ContentController@ServerList');
+Route::match(['get', 'post'], '/tarifs', 'ContentController@TarifList')->name('tarifs');;
 
 Route::prefix('speedtest')->name('speedtest')->group(function () {
     Route::match(['get', 'post'], 'empty', 'SpeedTestController@emptyResponse')->name('empty');
@@ -84,7 +87,7 @@ Route::group(['middleware'=>'auth'], function () {
     
 	//Роуты для физ лиц
     Route::get('home',['middleware'=>'check-permission:user|admin','uses'=>'HomeController@index'])->name('home');
-    Route::match(['get', 'post'], 'tarifs',['middleware'=>'check-permission:user|admin','uses'=>'HomeController@ChangeTarif'])->name('tarifs');
+    Route::match(['get', 'post'], 'u_tarifs',['middleware'=>'check-permission:user|admin','uses'=>'HomeController@ChangeTarif'])->name('u_tarifs');
     Route::match(['get', 'post'], 'payment',['middleware'=>'check-permission:user|admin','uses'=>'HomeController@showPayForm'])->name('payment');
     
 	
