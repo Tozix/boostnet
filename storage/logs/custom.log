@@ -1,0 +1,57 @@
+[2018-10-19 11:30:56] local.INFO: Result Pay: Обратились к файлу  
+[2018-10-19 11:30:56] local.INFO: Result Pay: Получили сигну: A45035CEDA04F86C4C0D7DA46903B289  
+[2018-10-19 11:30:56] local.INFO: Result Pay: Сравниваем Сигны: A45035CEDA04F86C4C0D7DA46903B289 - A45035CEDA04F86C4C0D7DA46903B289  
+[2018-10-19 11:30:56] local.INFO: Result Pay: Сигны совпадают! Начисляем деньги: 1.000000 юзеру: 1  
+[2018-10-19 11:31:07] local.INFO: Success Pay: Обратились к файлу  
+[2018-10-19 11:31:07] local.INFO: Success Pay: Сигны совпадают! Все заебок  
+[2018-10-30 16:13:08] local.INFO: Result Pay: Обратились к файлу  
+[2018-12-16 13:22:50] local.INFO: Result Pay: Обратились к файлу  
+[2018-12-16 13:22:50] local.INFO: Result Pay: Получили сигну: 6CE5D63B8C75DD2DD8EDBC5FCD796E4E  
+[2018-12-16 13:22:50] local.INFO: Result Pay: Сравниваем Сигны: 6CE5D63B8C75DD2DD8EDBC5FCD796E4E - 6CE5D63B8C75DD2DD8EDBC5FCD796E4E  
+[2018-12-16 13:22:50] local.INFO: Result Pay: Сигны совпадают! Начисляем деньги: 500.000000 юзеру: 2  
+[2018-12-16 13:23:00] local.INFO: Success Pay: Обратились к файлу  
+[2018-12-16 13:23:00] local.INFO: Success Pay: Сигны совпадают! Все заебок  
+[2018-12-24 19:06:45] local.INFO: Success Pay: Обратились к файлу  
+[2018-12-24 19:06:45] local.INFO: Success Pay: Сигны совпадают! Все заебок  
+[2018-12-24 19:07:23] local.INFO: Success Pay: Обратились к файлу  
+[2018-12-24 19:07:23] local.INFO: Success Pay: Сигны совпадают! Все заебок  
+[2019-02-27 11:13:28] local.INFO: Result Pay: Обратились к файлу  
+[2019-02-27 11:13:28] local.INFO: Result Pay: Получили сигну: 8566A5254541D553AA321494DFE5E688  
+[2019-02-27 11:13:28] local.INFO: Result Pay: Сравниваем Сигны: 8566A5254541D553AA321494DFE5E688 - 8566A5254541D553AA321494DFE5E688  
+[2019-02-27 11:13:28] local.INFO: Result Pay: Сигны совпадают! Начисляем деньги: 300.000000 юзеру: 2  
+[2019-02-27 11:13:36] local.INFO: Success Pay: Обратились к файлу  
+[2019-02-27 11:13:36] local.INFO: Success Pay: Сигны совпадают! Все заебок  
+[2019-09-30 09:53:00] local.INFO: Result Pay: Обратились к файлу  
+[2019-09-30 09:53:00] local.INFO: Result Pay: Получили сигну: B74CF835C31777DE2180B14DFA2E7DB5  
+[2019-09-30 09:53:00] local.INFO: Result Pay: Сравниваем Сигны: B74CF835C31777DE2180B14DFA2E7DB5 - B74CF835C31777DE2180B14DFA2E7DB5  
+[2019-09-30 09:53:00] local.INFO: Result Pay: Сигны совпадают! Начисляем деньги: 150.000000 юзеру: 2  
+[2019-09-30 09:53:42] local.INFO: Success Pay: Обратились к файлу  
+[2019-09-30 09:53:42] local.INFO: Success Pay: Сигны совпадают! Все заебок  
+[2019-10-22 09:32:30] local.INFO: Result Pay: Обратились к файлу  
+[2019-10-22 09:32:30] local.INFO: Result Pay: Получили сигну: 04D0851291775F5D18087CA50A17BA7F  
+[2019-10-22 09:32:30] local.INFO: Result Pay: Сравниваем Сигны: 04D0851291775F5D18087CA50A17BA7F - 04D0851291775F5D18087CA50A17BA7F  
+[2019-10-22 09:32:30] local.INFO: Result Pay: Сигны совпадают! Начисляем деньги: 250.000000 юзеру: 2  
+[2019-11-26 09:15:30] local.INFO: Result Pay: Обратились к файлу  
+[2019-11-26 09:15:30] local.INFO: Result Pay: Получили сигну: CD72693A5EB517A8CC3A1766316BFD1B  
+[2019-11-26 09:15:30] local.INFO: Result Pay: Сравниваем Сигны: CD72693A5EB517A8CC3A1766316BFD1B - CD72693A5EB517A8CC3A1766316BFD1B  
+[2019-11-26 09:15:30] local.INFO: Result Pay: Сигны совпадают! Начисляем деньги: 110.000000 юзеру: 2  
+[2019-12-12 10:02:42] local.INFO: Result Pay: Обратились к файлу  
+[2019-12-12 10:02:42] local.INFO: Result Pay: Получили сигну: 3B906AE6EFCC02F223AA817CAB96D408  
+[2019-12-12 10:02:42] local.INFO: Result Pay: Сравниваем Сигны: 3B906AE6EFCC02F223AA817CAB96D408 - 3B906AE6EFCC02F223AA817CAB96D408  
+[2019-12-12 10:02:42] local.INFO: Result Pay: Сигны совпадают! Начисляем деньги: 240.000000 юзеру: 2  
+[2019-12-12 10:02:52] local.INFO: Success Pay: Обратились к файлу  
+[2019-12-12 10:02:52] local.INFO: Success Pay: Сигны совпадают! Все заебок  
+[2020-01-15 12:03:08] local.INFO: Result Pay: Обратились к файлу  
+[2020-01-15 12:03:08] local.INFO: Result Pay: Получили сигну: B392525FA37C5A38F7AACBC5198CED2B  
+[2020-01-15 12:03:08] local.INFO: Result Pay: Сравниваем Сигны: B392525FA37C5A38F7AACBC5198CED2B - B392525FA37C5A38F7AACBC5198CED2B  
+[2020-01-15 12:03:08] local.INFO: Result Pay: Сигны совпадают! Начисляем деньги: 150.000000 юзеру: 2  
+[2020-02-07 11:59:24] local.INFO: Result Pay: Обратились к файлу  
+[2020-02-07 11:59:24] local.INFO: Result Pay: Получили сигну: 66F71A3C86FDB61D139FDB0F3AD58234  
+[2020-02-07 11:59:24] local.INFO: Result Pay: Сравниваем Сигны: 66F71A3C86FDB61D139FDB0F3AD58234 - 66F71A3C86FDB61D139FDB0F3AD58234  
+[2020-02-07 11:59:24] local.INFO: Result Pay: Сигны совпадают! Начисляем деньги: 300.000000 юзеру: 2  
+[2020-04-29 20:14:02] local.INFO: Result Pay: Обратились к файлу  
+[2020-04-29 20:14:02] local.INFO: Result Pay: Получили сигну: 0B04FA3F081F1F073CCC27F68F1F7EA8  
+[2020-04-29 20:14:02] local.INFO: Result Pay: Сравниваем Сигны: 0B04FA3F081F1F073CCC27F68F1F7EA8 - 0B04FA3F081F1F073CCC27F68F1F7EA8  
+[2020-04-29 20:14:02] local.INFO: Result Pay: Сигны совпадают! Начисляем деньги: 10.000000 юзеру: 1  
+[2020-04-29 20:14:05] local.INFO: Success Pay: Обратились к файлу  
+[2020-04-29 20:14:05] local.INFO: Success Pay: Сигны совпадают! Все заебок  
