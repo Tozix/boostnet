@@ -14,7 +14,7 @@
 
 
 			<div class="row">
-				<div class="col-md-6 mb-4">
+				<div class="col-md-8 mb-4">
 					<div class="card h-100">
 						<div class="card-body">
 							<h4>Тест возможной скорости интернета</h4>
@@ -80,16 +80,12 @@
 
 
 
-				<div class="col-md-6 mb-4">
+				<div class="col-md-4 mb-4">
 					<div class="card h-100">
 						<div class="card-body">
 							<h4>Экономить просто!</h4>
 							<hr>
-							<div class="text-center"><object type="image/svg+xml"
-									data="/img/WireGuard-Icon-Logo.wine.svg" width="200" height="200">
-									<img src="/img/WireGuard-Icon-Logo.wine.svg" width="200" height="200"
-										alt="image format png" />
-								</object></div>
+
 
 							<p class="card-text">VPN в Томске по небольшой стоимости — это реально! Нужно всего лишь
 								пройти регистрацию на нашем сайте и выбрать интересующий вас тариф. Мы предоставляем
@@ -97,7 +93,7 @@
 								технологий и качественного оборудования обеспечивается стабильное и безопасное
 								соединение с глобальной сетью. </p>
 							<div class="text-center"> <a class="btn btn-primary btn-lg"
-									href="{{ route('register') }}">Регистрация!</a></div>
+									href="{{ route('register') }}">Стать клиентом!</a></div>
 						</div>
 					</div>
 				</div>
@@ -120,7 +116,7 @@
 				<div class="col-md-12 mb-4">
 					<div class="card h-100">
 						<div class="card-body">
-							<h4>Тест возможной скрости интернета</h4>
+							<h4>Тест возможной скорости интернета</h4>
 							<hr>
 
 
@@ -278,6 +274,6 @@
 
 	];
 </script>
-<script src="/js/speedtest.js"></script>
-<script src="/js/stcore.js"></script>
+<script src="{{ asset('js/speedtest.js')}}" defer></script>
+<script src="{{ asset('js/stcore.js')}}" defer></script>
 @endpush

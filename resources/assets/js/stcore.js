@@ -1,65 +1,168 @@
-console.log("Отрисовываем спидометры");
-var opts = {
-    angle: 0.15, // The span of the gauge arc
-    lineWidth: 0.2, // The line thickness
-    radiusScale: 1, // Relative radius
-    pointer: {
-        length: 0.6, // // Relative to gauge radius
-        strokeWidth: 0.035, // The thickness
-        color: '#000000' // Fill color
-    },
-    limitMax: false,     // If false, max value increases automatically if value > maxValue
-    limitMin: false,     // If true, the min value of the gauge will be fixed
-    colorStart: '#6FADCF',   // Colors
-    colorStop: '#8FC0DA',    // just experiment with them
-    strokeColor: '#E0E0E0',  // to see which ones work best for you
-    generateGradient: true,
-    highDpiSupport: true,     // High resolution support
+$( document ).ready(function() {
+    initServers();
+});
+function I(i){return document.getElementById(i);}
 
-};
 
-var target = document.getElementById('upload'); // your canvas element
-var upload_gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-upload_gauge.setTextField(document.getElementById("upload-textfield"));
-upload_gauge.maxValue = 150; // set max gauge value
-upload_gauge.setMinValue(0);  // Prefer setter over gauge.minValue = 0
-upload_gauge.set(0);
-upload_gauge.animationSpeed = 32; // set animation speed (32 is default value)
 
-var target = document.getElementById('download'); // your canvas element
-var download_gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-download_gauge.setTextField(document.getElementById("download-textfield"));
-download_gauge.maxValue = 150; // set max gauge value
-download_gauge.setMinValue(0);  // Prefer setter over gauge.minValue = 0
-download_gauge.set(0);
-download_gauge.animationSpeed = 32; // set animation speed (32 is default value)
+//INITIALIZE SPEEDTEST
+var s=new Speedtest(); //create speedtest object
+s.setParameter("telemetry_level","basic"); //enable telemetry
 
-var w = null;
-
-function startStop() {
-    if (w != null) {
-        w.postMessage('abort');
-        w = null;
-    } else {
-        w = new Worker('/js/speedtest.min.js');
-
-        setInterval(function () {
-            if (w) w.postMessage('status')
-        }, 200);
-
-        w.onmessage = function (event) {
-            var data = event.data.split(';');
-            var status = Number(data[0]);
-            console.log(status);
-            if (status >= 4) {
-                console.log("Тест окончен, нужно обновить кнопку на СТАРТ");
-                w = null
-            }
-            else {
-                upload_gauge.set(data[2]);
-                download_gauge.set(data[1]);
-            }
-        };
-        w.postMessage('start {"garbagePhp_chunkSize": 5, "time_ul":5, "time_dl":5, "test_order": "D_U", "url_dl": "/speedtest/garbage", "url_ul": "/speedtest/empty"}');
+//SERVER AUTO SELECTION
+function initServers(){
+    var noServersAvailable=function(){
+        I("message").innerHTML="No servers available";
     }
+    var runServerSelect=function(){
+        s.selectServer(function(server){
+            if(server!=null){ //at least 1 server is available
+                I("loading").className="hidden"; //hide loading message
+                //populate server list for manual selection
+                for(var i=0;i<SPEEDTEST_SERVERS.length;i++){
+                    if(SPEEDTEST_SERVERS[i].pingT==-1) continue;
+                    var option=document.createElement("option");
+                    option.value=i;
+                    option.textContent=SPEEDTEST_SERVERS[i].name;
+                    if(SPEEDTEST_SERVERS[i]===server) option.selected=true;
+                    I("server").appendChild(option);
+                }
+                //show test UI
+                I("testWrapper").className="visible";
+                initUI();
+            }else{ //no servers are available, the test cannot proceed
+                noServersAvailable();
+            }
+        });
+    }
+    if(typeof SPEEDTEST_SERVERS === "string"){
+        //need to fetch list of servers from specified URL
+        s.loadServerList(SPEEDTEST_SERVERS,function(servers){
+            if(servers==null){ //failed to load server list
+                noServersAvailable();
+            }else{ //server list loaded
+                SPEEDTEST_SERVERS=servers;
+                runServerSelect();
+            }
+        });
+    }else{
+        //hardcoded server list
+        s.addTestPoints(SPEEDTEST_SERVERS);
+        runServerSelect();
+    }
+}
+
+var meterBk=/Trident.*rv:(\d+\.\d+)/i.test(navigator.userAgent)?"#EAEAEA":"#80808040";
+var dlColor="#E74C3C",
+	ulColor="#2C3E50";
+var progColor=meterBk;
+
+//CODE FOR GAUGES
+function drawMeter(c,amount,bk,fg,progress,prog){
+	var ctx=c.getContext("2d");
+	var dp=window.devicePixelRatio||1;
+	var cw=c.clientWidth*dp, ch=c.clientHeight*dp;
+	var sizScale=ch*0.0055;
+	if(c.width==cw&&c.height==ch){
+		ctx.clearRect(0,0,cw,ch);
+	}else{
+		c.width=cw;
+		c.height=ch;
+	}
+	ctx.beginPath();
+	ctx.strokeStyle=bk;
+	ctx.lineWidth=12*sizScale;
+	ctx.arc(c.width/2,c.height-58*sizScale,c.height/1.8-ctx.lineWidth,-Math.PI*1.1,Math.PI*0.1);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.strokeStyle=fg;
+	ctx.lineWidth=12*sizScale;
+	ctx.arc(c.width/2,c.height-58*sizScale,c.height/1.8-ctx.lineWidth,-Math.PI*1.1,amount*Math.PI*1.2-Math.PI*1.1);
+	ctx.stroke();
+	if(typeof progress !== "undefined"){
+		ctx.fillStyle=prog;
+		ctx.fillRect(c.width*0.3,c.height-16*sizScale,c.width*0.4*progress,4*sizScale);
+	}
+}
+function mbpsToAmount(s){
+	return 1-(1/(Math.pow(1.3,Math.sqrt(s))));
+}
+function format(d){
+    d=Number(d);
+    if(d<10) return d.toFixed(2);
+    if(d<100) return d.toFixed(1);
+    return d.toFixed(0);
+}
+
+//UI CODE
+var uiData=null;
+function startStop(){
+    if(s.getState()==3){
+		//speedtest is running, abort
+		s.abort();
+		data=null;
+		$('#startStopBtn').text('НАЧАТЬ').addClass('btn-primary').removeClass('btn-danger');
+		I("server").disabled=false;
+		initUI();
+	}else{
+		//test is not running, begin
+		$('#startStopBtn').text('СТОП').addClass('btn-danger').removeClass('btn-primary');
+		//I("shareArea").style.display="none";
+		I("server").disabled=true;
+		s.onupdate=function(data){
+            uiData=data;
+		};
+		s.onend=function(aborted){
+            $('#startStopBtn').text('НАЧАТЬ').addClass('btn-primary').removeClass('btn-danger');
+            I("server").disabled=false;
+            updateUI(true);
+          /*  if(!aborted){
+                //if testId is present, show sharing panel, otherwise do nothing
+                try{
+                    var testId=uiData.testId;
+                    if(testId!=null){
+                        var shareURL=window.location.href.substring(0,window.location.href.lastIndexOf("/"))+"/results/?id="+testId;
+                        I("resultsImg").src=shareURL;
+                        I("resultsURL").value=shareURL;
+                        I("testId").innerHTML=testId;
+                       // I("shareArea").style.display="";
+                    }
+                }catch(e){}
+            } */
+		};
+		s.start();
+	}
+}
+//this function reads the data sent back by the test and updates the UI
+function updateUI(forced){
+	if(!forced&&s.getState()!=3) return;
+	if(uiData==null) return;
+	var status=uiData.testState;
+	//I("ip").textContent=uiData.clientIp;
+	I("dlText").textContent=(status==1&&uiData.dlStatus==0)?"...":format(uiData.dlStatus);
+	drawMeter(I("dlMeter"),mbpsToAmount(Number(uiData.dlStatus*(status==1?oscillate():1))),meterBk,dlColor,Number(uiData.dlProgress),progColor);
+	I("ulText").textContent=(status==3&&uiData.ulStatus==0)?"...":format(uiData.ulStatus);
+	drawMeter(I("ulMeter"),mbpsToAmount(Number(uiData.ulStatus*(status==3?oscillate():1))),meterBk,ulColor,Number(uiData.ulProgress),progColor);
+	I("pingText").textContent=format(uiData.pingStatus);
+	I("jitText").textContent=format(uiData.jitterStatus);
+}
+function oscillate(){
+	return 1+0.02*Math.sin(Date.now()/100);
+}
+//update the UI every frame
+window.requestAnimationFrame=window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.msRequestAnimationFrame||(function(callback,element){setTimeout(callback,1000/60);});
+function frame(){
+	requestAnimationFrame(frame);
+	updateUI();
+}
+frame(); //start frame loop
+//function to (re)initialize UI
+function initUI(){
+	drawMeter(I("dlMeter"),0,meterBk,dlColor,0);
+	drawMeter(I("ulMeter"),0,meterBk,ulColor,0);
+	I("dlText").textContent="";
+	I("ulText").textContent="";
+	I("pingText").textContent="";
+	I("jitText").textContent="";
+	//I("ip").textContent="";
 }

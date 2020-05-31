@@ -1,6 +1,8 @@
 {
+    "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/js/stcore.js": "/js/stcore.js",
-    "/js/speedtest.min.js": "/js/speedtest.min.js",
-    "/js/gauge.min.js": "/js/gauge.min.js"
+    "/js/speedtest_worker.js": "/js/speedtest_worker.js",
+    "/js/speedtest.js": "/js/speedtest.js",
+    "/js/jquery.min.js": "/js/jquery.min.js"
 }
