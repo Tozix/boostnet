@@ -142,6 +142,7 @@ class AdminController extends Controller
             case "add":
                 if ($request->isMethod('post')) {
                     $this->validate($request, [
+                        'name' => 'required|max:100',
                         'domain' => 'required|max:100',
                         'ip' => 'required|ipv4',
                         'city' => 'required|alpha_num',
@@ -149,7 +150,8 @@ class AdminController extends Controller
                         'description' => 'required|string|max:400',
 
                     ], [], [
-                        'domain' => 'Название тарифа',
+                        'name' => 'Название сервера',
+                        'domain' => 'Имя домена',
                         'ip' => 'IP Адрес сервера',
                         'city' => 'Город расположения',
                         'speed' => 'Ширина канала',
@@ -157,16 +159,16 @@ class AdminController extends Controller
                     ]);
                     Server::unguard();
                     $server = Server::create([
+                        'name' => $request->name,
                         'domain' => $request->domain,
                         'ip' => $request->ip,
                         'city' => $request->city,
-                        'num_users' => 0,
                         'speed' => $request->speed,
                         'status' => 0,
                         'description' => $request->description,
                     ]);
                     Server::reguard();
-                    Session::flash('success', 'Сервер ' . $server->domain . ' успешно добавлен в систему!');
+                    Session::flash('success', 'Сервер ' . $server->name . ' успешно добавлен в систему!');
                     return redirect()->route('admin_server', ['action' => $action]);
 
                 } else {
@@ -178,32 +180,32 @@ class AdminController extends Controller
                 $server = Server::where('id', $id)->first();
                 if ($request->isMethod('post')) {
                     $this->validate($request, [
+                        'name' => 'required|max:100',
                         'domain' => 'required|max:100',
                         'ip' => 'required|ipv4',
                         'city' => 'required|alpha_num',
-                        'num_users' => 'required|numeric|max:255',
                         'speed' => 'required|numeric|max:1073741824',
                         'description' => 'required|string|max:400',
 
                     ], [], [
-                        'domain' => 'Название тарифа',
+                        'name' => 'Имя сервера',
+                        'domain' => 'Доменное имя',
                         'ip' => 'IP Адрес сервера',
                         'city' => 'Город расположения',
-                        'num_users' => 'Кол-во пользователей',
                         'speed' => 'Ширина канала',
                         'description' => 'Описание сервера',
                     ]);
                     Server::unguard();
                     $server->update([
+                        'name' => $request->name,
                         'domain' => $request->domain,
                         'ip' => $request->ip,
                         'city' => $request->city,
-                        'num_users' => $request->num_users,
                         'speed' => $request->speed,
                         'description' => $request->description,
                     ]);
                     Server::reguard();
-                    Session::flash('success', 'Тариф успешно изменен!');
+                    Session::flash('success', 'Сервер успешно изменен!');
                     return redirect()->route('admin_server', ['action' => $action, 'id' => $server->id]);
 
                 } else {

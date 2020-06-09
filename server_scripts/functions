@@ -1,0 +1,125 @@
+#!/bin/bash
+###### Системные функции #####
+
+
+#Функция корректного влючения лимитов
+function limits() {
+common_name=${1}
+BITE_LIMIT=${2}
+#Чистим от старых лимитов
+echo / > /proc/net/ipt_ratelimit/${common_name}_in
+echo / > /proc/net/ipt_ratelimit/${common_name}_out
+IPS=`cat /etc/openvpn/conn/${common_name}`
+while IFS=',' read -ra ADDR; do
+#Проверяем кол-во IP адресов в списке
+if [ "${#ADDR[*]}" -gt 1 ]
+then
+       #Тогда перебираем массив адресов и проверяем на доступность
+               for i in "${ADDR[@]}"; do
+		if [ "${i}" != "${3}" ]
+		then
+		log "ВОТ ${i} != ${3}"
+			#Проверяем есть ли активный конект с этого адреса
+       			if grep -w "${i}" /etc/openvpn/openvpn-status.log > /dev/null 2>&1 || grep -w "${i}" /etc/openvpn/tunnel-openvpn-status.log > /dev/null 2>&1
+                        then
+                                log "Адрес ${i} в статус логе найден"
+                        else
+                                log "Адрес ${i} не найден"
+				disconnect "/etc/openvpn/conn/${common_name}" "${i}"
+                                log "Убираем правило маскарадинга"
+                                rule_nat_rem "POSTROUTING -s ${i} -j MASQUERADE"
+
+                       fi
+		fi
+              done
+fi
+done <<< "$IPS"
+IPS=`cat /etc/openvpn/conn/${common_name}`
+#Повторно считаем кол-во IP в файле
+while IFS=',' read -ra ADDR; do
+if [ "${#ADDR[*]}" -gt 0 ]
+then
+log "Больше 0, тогда добавляем лимиты"
+echo @+${IPS} ${BITE_LIMIT} > /proc/net/ipt_ratelimit/${common_name}_in
+echo @+${IPS} ${BITE_LIMIT} > /proc/net/ipt_ratelimit/${common_name}_out
+else
+log "Нет активных конектов у пользователя ${common_name}, чистим от мусора"
+rule_rem "FORWARD -m ratelimit --ratelimit-set ${common_name}_in --ratelimit-mode src -j DROP"
+rule_rem "FORWARD -m ratelimit --ratelimit-set ${common_name}_out --ratelimit-mode dst -j DROP"
+fi
+done <<< "$IPS"
+}
+
+#Функция корректного добавления правила в iptables
+function rule_add() {
+while /sbin/iptables -C $1 > /dev/null 2>&1; do
+/sbin/iptables -D $1
+done
+/sbin/iptables -A $1
+}
+function rule_rem() {
+while /sbin/iptables -C $1 > /dev/null 2>&1; do
+/sbin/iptables -D $1
+done
+}
+
+function rule_nat_rem() {
+while /sbin/iptables -t nat -C $1 > /dev/null 2>&1; do
+/sbin/iptables -t nat -D $1
+done
+}
+
+#Функция корректного добавления правила в цепочку nat iptables
+function rule_nat_add() {
+while /sbin/iptables -t nat -C $1 > /dev/null 2>&1; do
+/sbin/iptables -t nat -D $1
+done
+/sbin/iptables -t nat -A $1
+}
+
+
+
+### Функции логирования
+### Логгер
+log() {
+message="[ $(date +"%y-%m-%d %T") ] $@"
+if ${DEBUG}; then echo "$message"; fi
+echo $message >>$LOGFILE
+}
+
+log_e() {
+message="[ $(date +"%y-%m-%d %T") ] [ ERROR ] $@"
+if ${DEBUG}; then echo "$message"; fi
+echo $message >>$LOGFILE
+}
+#Функция отчетов для пользователей
+function reports {
+USER_ID=$1 #ID Юзера для кого уведомление
+TYPE=$2 #Тип уведомления
+TITLE=$3 #Заголовок уведомления (ХЗ нужен ли)
+DESC=$4 #Текст уведомления
+mysql_one "INSERT INTO reports(user_id,type,title,description,created_at,updated_at) VALUES ('${USER_ID}', '${TYPE}','${TITLE}','${DESC}',NOW(),NOW());"
+}
+
+
+### MySQL функции
+### Функция для перебора значений(Ответом будет массив)
+function mysql_array {
+if ${DB_MARIA} 
+then
+/usr/bin/mysql --user=${DB_USER} --password=${DB_PASSWORD} --host=${DB_SERVER} --port=${DB_PORT} -sse "${1}" ${DB_NAME}
+else 
+/usr/bin/mysql --login-path=${DB_PROFILE} -sse "${1}" ${DB_NAME}
+fi
+}
+### Функция для получения или значения
+function mysql_one {
+if ${DB_MARIA} 
+then
+echo "${1}" | /usr/bin/mysql --user=${DB_USER} --password=${DB_PASSWORD} --host=${DB_SERVER} --port=${DB_PORT} -A -B -s ${DB_NAME}
+else
+echo "${1}" | /usr/bin/mysql --login-path=${DB_PROFILE} -A -B -s ${DB_NAME}
+fi
+}
+
+

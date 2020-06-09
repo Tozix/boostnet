@@ -56,6 +56,7 @@ Route::prefix('speedtest')->name('speedtest')->group(function () {
     Route::match(['get', 'post'], 'empty', 'SpeedTestController@emptyResponse')->name('empty');
     Route::match(['get', 'post'], 'garbage', 'SpeedTestController@garbage')->name('garbage');
     Route::match(['get', 'post'], 'getip', 'SpeedTestController@getip')->name('getip');
+    Route::match(['get', 'post'], 'result', 'SpeedTestController@result')->name('result');
 });
 Route::match(['get', 'post'], '/pdf', 'AdminController@pdf');
 

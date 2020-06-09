@@ -14,6 +14,27 @@
 
 
 			<div class="row">
+
+
+				<div class="col-md-4 mb-4">
+					<div class="card h-100">
+						<div class="card-body">
+							<h4>Экономить просто!</h4>
+							<hr>
+
+
+							<p class="card-text">VPN в Томске по небольшой стоимости — это реально! Нужно всего лишь
+								пройти регистрацию на нашем сайте и выбрать интересующий вас тариф. Мы предоставляем
+								услуги по ускорению вашего текущего интернет канала. Благодаря использованию современных
+								технологий и качественного оборудования обеспечивается стабильное и безопасное
+								соединение с глобальной сетью. </p>
+							<div class="text-center"> <a class="btn btn-primary btn-lg"
+									href="{{ route('register') }}">Стать клиентом!</a></div>
+						</div>
+					</div>
+				</div>
+
+
 				<div class="col-md-8 mb-4">
 					<div class="card h-100">
 						<div class="card-body">
@@ -52,23 +73,22 @@
 									</div>
 
 								</div>
-
-
-								<p class="my-2 my-lg-0">
-									<div id="loading">
-										<p id="message"><span class="loadCircle"></span>Осуществляется поиск
-											оптимального сервера...</p>
+								<div id="loading">
+									<p id="message"><span class="loadCircle"></span>Осуществляется поиск оптимального сервера...</p>
 									</div>
 									<div id="testWrapper" class="hidden">
-										<div id="serverArea">
-											Сервер: <select class="mr-sm-2" id="server"
-												onchange="s.setSelectedServer(SPEEDTEST_SERVERS[this.value])"></select>
-											<button type="button" id="startStopBtn" class="btn btn-primary my-2 my-sm-0"
-												onclick="startStop()">НАЧАТЬ</button>
-										</div>
+								<div class="form-group row">
+									<label for="server" class="col-sm-3 col-form-label text-md-right">Сервер</label>
+		
+									<div id="serverArea" class="col-md-6">
+										<select class="form-control" id="server" onchange="s.setSelectedServer(SPEEDTEST_SERVERS[this.value])"></select>
 									</div>
-
-								</p>
+									<button type="button" id="startStopBtn" class="btn btn-primary my-2 my-sm-0" onclick="startStop()">НАЧАТЬ</button>
+								</div>
+										<div id="ipArea">
+			<span id="ip"></span>
+		</div>
+							</div>
 							</div>
 
 
@@ -76,27 +96,12 @@
 						</div>
 					</div>
 				</div>
+				
 
 
 
 
-				<div class="col-md-4 mb-4">
-					<div class="card h-100">
-						<div class="card-body">
-							<h4>Экономить просто!</h4>
-							<hr>
 
-
-							<p class="card-text">VPN в Томске по небольшой стоимости — это реально! Нужно всего лишь
-								пройти регистрацию на нашем сайте и выбрать интересующий вас тариф. Мы предоставляем
-								услуги по ускорению вашего текущего интернет канала. Благодаря использованию современных
-								технологий и качественного оборудования обеспечивается стабильное и безопасное
-								соединение с глобальной сетью. </p>
-							<div class="text-center"> <a class="btn btn-primary btn-lg"
-									href="{{ route('register') }}">Стать клиентом!</a></div>
-						</div>
-					</div>
-				</div>
 			</div>
 
 
@@ -151,23 +156,19 @@
 									</div>
 
 								</div>
-
-
-								<p class="my-2 my-lg-0">
-									<div id="loading">
-										<p id="message"><span class="loadCircle"></span>Осуществляется поиск
-											оптимального сервера...</p>
+								<div id="loading">
+									<p id="message"><span class="loadCircle"></span>Осуществляется поиск оптимального сервера...</p>
 									</div>
 									<div id="testWrapper" class="hidden">
-										<div id="serverArea">
-											Сервер: <select class="mr-sm-2" id="server"
-												onchange="s.setSelectedServer(SPEEDTEST_SERVERS[this.value])"></select>
-											<button type="button" id="startStopBtn" class="btn btn-primary my-2 my-sm-0"
-												onclick="startStop()">НАЧАТЬ</button>
-										</div>
+								<div class="form-group row">
+									<label for="server" class="col-sm-3 col-form-label text-md-right">Сервер</label>
+		
+									<div id="serverArea" class="col-md-6">
+										<select class="form-control" id="server" onchange="s.setSelectedServer(SPEEDTEST_SERVERS[this.value])"></select>
 									</div>
-
-								</p>
+									<button type="button" id="startStopBtn" class="btn btn-primary my-2 my-sm-0" onclick="startStop()">НАЧАТЬ</button>
+								</div>
+							</div>
 							</div>
 
 
@@ -188,8 +189,8 @@
 					<!-- Call to Action Well -->
 					<div class="card text-white bg-secondary text-center">
 						<div class="card-body">
-							<p class="m-0">Мы не просто ускоряем интернет, а подбираем для Вас пакет услуг, оптимально
-								соответствующий задачам Вашего бизнеса!</p>
+							<p class="m-0">Скорость входящего соединения влияет на то, как быстро открываются сайты и скачиваются файлы.</p>
+							<p class="m-0">Исходящее соединение используется при передаче данных с вашего компьютера в сеть — например, при отправке писем или загрузке фотографий в облако.</p>
 						</div>
 					</div>
 				</div>
@@ -250,11 +251,16 @@
 @endpush
 @push('scripts')
 <script type="text/javascript">
+$( document ).ready(function() {
+    initServers();
+});
+function I(i){return document.getElementById(i);}
 	var SPEEDTEST_SERVERS = [
 	@foreach($data as $item)
 		{ 
 			name: "{{$item->domain}}", 
 			server: "//{{$item->domain}}",
+			server_id: "{{$item->id}}",
 			dlURL: "/speedtest/garbage.php", 
 			ulURL: "/speedtest/empty.php", 
 			pingURL: "/speedtest/empty.php",
@@ -264,7 +270,8 @@
 		@endforeach
 		{ 
 			name: "Boost Net Main",
-			server: "https://boostnet.ru",
+			server: "//{{ config('app.domain') }}",
+			server_id: "0",
 			dlURL: "/speedtest/garbage",
 			ulURL: "/speedtest/empty",
 			pingURL: "/speedtest/empty",

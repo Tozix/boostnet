@@ -37,8 +37,8 @@ class User extends Authenticatable
     {
         return $this->hasOne('BoostNet\Tarif', 'id', 'tarif_id');
     }
-    public function server()
+     public function accounts()
     {
-        return $this->hasOne('BoostNet\Server', 'id', 'server_id');
+        return $this->hasMany('BoostNet\Account');
     }
 }

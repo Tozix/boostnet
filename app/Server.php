@@ -9,6 +9,6 @@ class Server extends Model
     protected $table = 'servers';
     public $timestamps = false;
     protected $fillable = [
-        'domain', 'ip', 'city', 'num_users', 'speed', 'status', 'description'
+        'name','domain', 'ip', 'city', 'speed', 'status', 'description'
     ];
 }

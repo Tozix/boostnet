@@ -15,7 +15,7 @@ class Org extends Model
     
     public function user()
     {
-        return $this->hasOne('BoostNet\User', 'id', 'user_id');
+        return $this->belongsTo('BoostNet\User');
     }
 
 }

@@ -1,14 +1,11 @@
-$( document ).ready(function() {
-    initServers();
-});
-function I(i){return document.getElementById(i);}
+
 
 
 
 //INITIALIZE SPEEDTEST
 var s=new Speedtest(); //create speedtest object
-s.setParameter("telemetry_level","basic"); //enable telemetry
-
+s.setParameter("telemetry_level","full"); //Включаем сбор инфы о замерах скорости
+s.setParameter("url_telemetry","https://boostnet.local/speedtest/result"); //URL куда отправляем статистику
 //SERVER AUTO SELECTION
 function initServers(){
     var noServersAvailable=function(){

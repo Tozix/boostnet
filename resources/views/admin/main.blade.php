@@ -2,17 +2,15 @@
 
 @section('content')
     <div class="container">
-<div class="row">
-	        <div class="col-md-12 mb-4">
-	                      <!-- Call to Action Well -->
-      <div class="card text-white bg-secondary text-center">
-        <div class="card-body">
-          <p class="m-0">Админка</p>
-        </div>
-      </div>
-	</div>
-</div>
         <div class="row justify-content-center">
+          <div class="col-md-12 mb-4">
+            <!-- Call to Action Well -->
+<div class="card text-white bg-secondary text-center">
+<div class="card-body">
+<p class="m-0">Админка</p>
+</div>
+</div>
+</div>
             <div class="col-md-12">
 <div class="row">
                         <div class="col-md-3 mb-4">

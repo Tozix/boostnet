@@ -3,7 +3,7 @@
 namespace BoostNet\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use BoostNet\Result;
 class SpeedTestController extends Controller
 {
     public function emptyResponse(){
@@ -14,6 +14,48 @@ class SpeedTestController extends Controller
         header("Pragma: no-cache");
         header("Connection: keep-alive");
         echo '';
+    }
+    public function result(Request $request){
+        if ($request->isMethod('post')) {
+        $ip=($_SERVER['REMOTE_ADDR']);
+        $ispinfo=($request["ispinfo"]);
+        $j_server_id = json_decode($request["extra"]);
+        $server_id=$j_server_id->{'server_id'};
+        $ua=($_SERVER['HTTP_USER_AGENT']);
+        $lang=""; if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) $lang=($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $dl=($request["dl"]);
+        $ul=($request["ul"]);
+        $ping=($request["ping"]);
+        $jitter=($request["jitter"]);
+       
+        /*
+        if($redact_ip_addresses){
+            $ip="0.0.0.0";
+            $ipv4_regex='/(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/';
+            $ipv6_regex='/(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/';
+            $hostname_regex='/"hostname":"([^\\\\"]|\\\\")*"/';
+            $ispinfo=preg_replace($ipv4_regex,"0.0.0.0",$ispinfo);
+            $ispinfo=preg_replace($ipv6_regex,"0.0.0.0",$ispinfo);
+            $ispinfo=preg_replace($hostname_regex,"\"hostname\":\"REDACTED\"",$ispinfo);
+            $log=preg_replace($ipv4_regex,"0.0.0.0",$log);
+            $log=preg_replace($ipv6_regex,"0.0.0.0",$log);
+            $log=preg_replace($hostname_regex,"\"hostname\":\"REDACTED\"",$log);
+        }
+        */
+        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0, s-maxage=0');
+        header('Cache-Control: post-check=0, pre-check=0', false);
+        header('Pragma: no-cache');
+                    Result::unguard();
+                    $result = Result::create([
+                        'user_id' => "0",
+                        'server_id' => $server_id,
+                        'ping' => $ping,
+                        'jitter' => $jitter,
+                        'download' => $dl,
+                        'upload' => $ul,
+                    ]);
+                    Result::reguard();
+    }
     }
     public function getip(){
         /*

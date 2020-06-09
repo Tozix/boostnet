@@ -16,6 +16,23 @@
 	@elseif(session('success'))
 	<div class="alert alert-success"><span class="glyphicon glyphicon-ok"></span><em> {!! session('success') !!}</em></div>
 	@endif
+
+
+                        <div class="form-group row">
+                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Имя сервера') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ $server->name }}" required autofocus>
+
+                                @if ($errors->has('name'))
+                                    <span class="invalid-feedback">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
+                                @endif
+                                <small class="form-text text-info">Будет отображаться в списке серверов</small>
+                            </div>
+                        </div>
+
                         <div class="form-group row">
                             
                             <label for="domain" class="col-sm-4 col-form-label text-md-right">{{ __('Имя домена') }}</label>
@@ -57,21 +74,6 @@
                                 <small class="form-text text-info">Город на латинице!</small>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label for="num_users" class="col-md-4 col-form-label text-md-right">{{ __('Кол-во пользователей') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="num_users" type="text" class="form-control{{ $errors->has('num_users') ? ' is-invalid' : '' }}" name="num_users" value="{{ $server->num_users }}" required autofocus>
-
-                                @if ($errors->has('num_users'))
-                                    <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('num_users') }}</strong>
-                                    </span>
-                                @endif
-                                <small class="form-text text-info">Без необходимости не редактировать!</small>
-                            </div>
-                        </div>
-
 
                         <div class="form-group row">
                             <label for="speed" class="col-sm-4 col-form-label text-md-right">{{ __('Ширина канала') }}</label>

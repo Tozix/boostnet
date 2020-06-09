@@ -16,6 +16,21 @@
 	@elseif(session('success'))
 	<div class="alert alert-success"><span class="glyphicon glyphicon-ok"></span><em> {!! session('success') !!}</em></div>
 	@endif
+
+                            <div class="form-group row">
+                            
+                            <label for="name" class="col-sm-4 col-form-label text-md-right">{{ __('Имя сервера') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus>
+
+                                @if ($errors->has('name'))
+                                    <span class="invalid-feedback">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
                         <div class="form-group row">
                             
                             <label for="domain" class="col-sm-4 col-form-label text-md-right">{{ __('Имя домена') }}</label>

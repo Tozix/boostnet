@@ -6,10 +6,10 @@
     <table class="table" id="table">
         <thead>
             <tr>
-                <th class="text-center">Имя домена</th>
+                <th class="text-center">Имя</th>
+                <th class="text-center">Домен</th>
                 <th class="text-center">IP Адрес</th>
                 <th class="text-center">Город</th>
-                <th class="text-center">Пользователей</th>
                 <th class="text-center">Скорость Мб/c</th>
                 <th class="text-center">Статус</th>
                 <th class="text-center"></th>
@@ -19,10 +19,10 @@
         <tbody>
             @foreach($data as $item)
             <tr class="item{{$item->id}}">
+                <td>{{$item->name}}</td>
                 <td>{{$item->domain}}</td>
                 <td>{{$item->ip}}</td>
                 <td>{{$item->city}}</td>
-                <td>{{$item->num_users}}</td>
                 <td>{{$item->speed/1048576}}</td>
                 <td>
                     @if($item->status==1)
