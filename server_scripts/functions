@@ -77,19 +77,31 @@ done
 /sbin/iptables -t nat -A $1
 }
 
+function check_d {
+if ! [ -d ${1}/ ]; then
+log_e "Дириктория ${1} не создана, создаем"
+mkdir ${1}/
+fi
+}
+function check_f {
+if ! [ -f ${1} ]; then
+log_e "Файла ${1} нет , создаем"
+touch ${1}
+fi
+}
 
 
 ### Функции логирования
 ### Логгер
 log() {
 message="[ $(date +"%y-%m-%d %T") ] $@"
-if ${DEBUG}; then echo "$message"; fi
+if ! [[ -z ${DEBUG} ]]; then echo "$message"; fi
 echo $message >>$LOGFILE
 }
 
 log_e() {
 message="[ $(date +"%y-%m-%d %T") ] [ ERROR ] $@"
-if ${DEBUG}; then echo "$message"; fi
+if ! [[ -z ${DEBUG} ]]; then echo "$message"; fi
 echo $message >>$LOGFILE
 }
 #Функция отчетов для пользователей
@@ -107,19 +119,20 @@ mysql_one "INSERT INTO reports(user_id,type,title,description,created_at,updated
 function mysql_array {
 if ${DB_MARIA} 
 then
-/usr/bin/mysql --user=${DB_USER} --password=${DB_PASSWORD} --host=${DB_SERVER} --port=${DB_PORT} -sse "${1}" ${DB_NAME}
+${MYSQL} --user=${DB_USER} --password=${DB_PASSWORD} --host=${DB_SERVER} --port=${DB_PORT} -sse "${1}" ${DB_NAME}
 else 
-/usr/bin/mysql --login-path=${DB_PROFILE} -sse "${1}" ${DB_NAME}
+${MYSQL} --login-path=${DB_PROFILE} -sse "${1}" ${DB_NAME}
 fi
 }
 ### Функция для получения или значения
 function mysql_one {
 if ${DB_MARIA} 
 then
-echo "${1}" | /usr/bin/mysql --user=${DB_USER} --password=${DB_PASSWORD} --host=${DB_SERVER} --port=${DB_PORT} -A -B -s ${DB_NAME}
+echo "${1}" | ${MYSQL} --user=${DB_USER} --password=${DB_PASSWORD} --host=${DB_SERVER} --port=${DB_PORT} -A -B -s ${DB_NAME}
 else
-echo "${1}" | /usr/bin/mysql --login-path=${DB_PROFILE} -A -B -s ${DB_NAME}
+echo "${1}" | ${MYSQL} --login-path=${DB_PROFILE} -A -B -s ${DB_NAME}
 fi
 }
+
 
 

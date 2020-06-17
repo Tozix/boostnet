@@ -13,7 +13,7 @@ DEBUG="true"
 ##log_e - ошибка
 ###
 
-mysql_array "SELECT id,name,tarif_id,balance FROM users where active_vpn=0 and server_id=1 ORDER BY updated_at" | while read i; do
-ID=($i)
-echo "${ID[0]} ${ID[1]}"
-done
+PRIVATE_KEY=`${TUNSAFE} genkey`
+PUBLIC_KEY=`echo ${PRIVATE_KEY} | ${TUNSAFE} pubkey`
+#${TUNSAFE} genkey | ${TEE} private_key # | ${TUNSAFE} pubkey > public_key
+echo ${PRIVATE_KEY} ${PUBLIC_KEY}

@@ -21,7 +21,7 @@
         @break
 
     @default
- <tr><td class="active">Статус VPN:</td><td>{{ $status }}</td></tr>
+ <tr><td class="active">Статус VPN:</td><td><span class="badge badge-pill badge-danger">Не выбран тариф</span></td></tr>
 @endswitch 
      
 
