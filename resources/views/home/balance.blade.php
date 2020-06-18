@@ -19,6 +19,9 @@
     @case(3)
  <tr><td class="active">Статус VPN:</td><td><span class="badge badge-pill badge-danger">Неактивен</span></td></tr>
         @break
+    @case(8)
+ <tr><td class="active">Статус VPN:</td><td><span class="badge badge-pill badge-warning">Доп. настройка</span></td></tr>
+        @break
 
     @default
  <tr><td class="active">Статус VPN:</td><td><span class="badge badge-pill badge-danger">Не выбран тариф</span></td></tr>

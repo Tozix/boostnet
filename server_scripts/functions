@@ -4,78 +4,32 @@
 
 #Функция корректного влючения лимитов
 function limits() {
-common_name=${1}
+NAME=${1}
 BITE_LIMIT=${2}
-#Чистим от старых лимитов
-echo / > /proc/net/ipt_ratelimit/${common_name}_in
-echo / > /proc/net/ipt_ratelimit/${common_name}_out
-IPS=`cat /etc/openvpn/conn/${common_name}`
-while IFS=',' read -ra ADDR; do
-#Проверяем кол-во IP адресов в списке
-if [ "${#ADDR[*]}" -gt 1 ]
+IP=${3}
+
+#Добавляем юзера в цепочку,если нет цепочки то создаем ее
+if ! ipset -L ${NAME} &>/dev/null
 then
-       #Тогда перебираем массив адресов и проверяем на доступность
-               for i in "${ADDR[@]}"; do
-		if [ "${i}" != "${3}" ]
-		then
-		log "ВОТ ${i} != ${3}"
-			#Проверяем есть ли активный конект с этого адреса
-       			if grep -w "${i}" /etc/openvpn/openvpn-status.log > /dev/null 2>&1 || grep -w "${i}" /etc/openvpn/tunnel-openvpn-status.log > /dev/null 2>&1
-                        then
-                                log "Адрес ${i} в статус логе найден"
-                        else
-                                log "Адрес ${i} не найден"
-				disconnect "/etc/openvpn/conn/${common_name}" "${i}"
-                                log "Убираем правило маскарадинга"
-                                rule_nat_rem "POSTROUTING -s ${i} -j MASQUERADE"
-
-                       fi
-		fi
-              done
+#Цепочки нет, создаем
+${IPSET} -N ${NAME} iphash
+#Формируем правила. Разрешаем доступ между юзеркими сетями
+${IPTABLES} -I FORWARD -m set --match-set ${NAME} src,dst -j ACCEPT
+${IPTABLES} -I FORWARD -m ratelimit --ratelimit-set ${NAME}_download --ratelimit-mode src -j DROP
+${IPTABLES} -I FORWARD -m ratelimit --ratelimit-set ${NAME}_upload --ratelimit-mode dst -j DROP
 fi
-done <<< "$IPS"
-IPS=`cat /etc/openvpn/conn/${common_name}`
-#Повторно считаем кол-во IP в файле
-while IFS=',' read -ra ADDR; do
-if [ "${#ADDR[*]}" -gt 0 ]
-then
-log "Больше 0, тогда добавляем лимиты"
-echo @+${IPS} ${BITE_LIMIT} > /proc/net/ipt_ratelimit/${common_name}_in
-echo @+${IPS} ${BITE_LIMIT} > /proc/net/ipt_ratelimit/${common_name}_out
-else
-log "Нет активных конектов у пользователя ${common_name}, чистим от мусора"
-rule_rem "FORWARD -m ratelimit --ratelimit-set ${common_name}_in --ratelimit-mode src -j DROP"
-rule_rem "FORWARD -m ratelimit --ratelimit-set ${common_name}_out --ratelimit-mode dst -j DROP"
-fi
-done <<< "$IPS"
+#Добавляем IP в список IPSet
+${IPSET} -A ${NAME} ${IP}
+#Вшарашиваем лимиты в соотвествии с выбранным тарифом
+if [ -f /proc/net/ipt_ratelimit/${NAME}_download ];then echo / > /proc/net/ipt_ratelimit/${NAME}_download; fi
+if [ -f /proc/net/ipt_ratelimit/${NAME}_upload ];then echo / > /proc/net/ipt_ratelimit/${NAME}_upload; fi
+IPS=`${IPSET} -L ${NAME} | sed '1,/Members/ d' | tr -s '\r\n' ',' | sed 's/.$//'`
+#Скачка (Download)
+echo @+${IPS} ${BITE_LIMIT} > /proc/net/ipt_ratelimit/${NAME}_download
+#Загрузка (Upload)
+echo @+${IPS} $((${BITE_LIMIT} / 2)) > /proc/net/ipt_ratelimit/${NAME}_upload
 }
 
-#Функция корректного добавления правила в iptables
-function rule_add() {
-while /sbin/iptables -C $1 > /dev/null 2>&1; do
-/sbin/iptables -D $1
-done
-/sbin/iptables -A $1
-}
-function rule_rem() {
-while /sbin/iptables -C $1 > /dev/null 2>&1; do
-/sbin/iptables -D $1
-done
-}
-
-function rule_nat_rem() {
-while /sbin/iptables -t nat -C $1 > /dev/null 2>&1; do
-/sbin/iptables -t nat -D $1
-done
-}
-
-#Функция корректного добавления правила в цепочку nat iptables
-function rule_nat_add() {
-while /sbin/iptables -t nat -C $1 > /dev/null 2>&1; do
-/sbin/iptables -t nat -D $1
-done
-/sbin/iptables -t nat -A $1
-}
 
 function check_d {
 if ! [ -d ${1}/ ]; then

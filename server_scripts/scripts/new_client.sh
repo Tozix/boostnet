@@ -19,7 +19,7 @@ log "##################################Запуск NEW Client##################
 
 log "----------------------------------------------------------------------"
 log "Ищем новых пользователей, не пустым балансом, для которых нужно создать VPN"
-mysql_array "SELECT id,name,tarif_id,balance FROM users where active_vpn=0 and balance!=0 or active_vpn=0 and tarif_id!=0 ORDER BY updated_at" | while read i; do
+mysql_array "SELECT id,name,tarif_id,balance FROM users where active_vpn=0 and tarif_id!=0 or active_vpn=8 and tarif_id!=0  ORDER BY updated_at" | while read i; do
 ID=($i)
 log "ID ${ID[0]} Name ${ID[1]} Tarif ${ID[2]} Balance ${ID[3]}"
 log "Ставим статус в процессе создания"
@@ -29,7 +29,7 @@ log "Создаем аккаунт"
 IP=`mysql_one "SELECT ipAddress FROM accounts where status=0 ORDER BY id limit 1"`
 
 log "Генерируем ключи для клиента ${ID[1]}"
-#${TUNSAFE} genkey | ${TEE} ${KEYS_DIR}/${1}_private_key | ${TUNSAFE} pubkey > ${KEYS_DIR}/${1}_public_key
+
 CLIENT_PRIVATE_KEY=`${TUNSAFE} genkey`
 CLIENT_PUBLIC_KEY=`echo ${CLIENT_PRIVATE_KEY} | ${TUNSAFE} pubkey`
 echo "Публичный ключ: ${CLIENT_PUBLIC_KEY}"
@@ -44,15 +44,18 @@ SERVER=($i)
 #Добавляем в таблицу НОВЫХ аккаунтов
 mysql_one "INSERT INTO new_accounts(user_id,server_id,ipAddress,public_key) VALUES ('${ID[0]}', '${SERVER[0]}','${IP}','${CLIENT_PRIVATE_KEY}');"
 done
-#Нужно в другом срипте#
-#log "Временно добавляем ПИРА в конфиг сервера"
-#/usr/bin/tunsafe set tun0 peer "${CLIENT_PUBLIC_KEY}" allowed-ips 10.10.0.${INT}/32
 
+done
 
-
-#limits "${ID[1]}" "${BITE_LIMIT}"
-#Уведомляем пользователя 1-ID,2-Тип,3-Заголовок,Текст
-#reports "${ID[0]}" "1" "Создание VPN аккаунта" "VPN аккаунт создан, инструкции по подключению находятся в личном кабинете."
-#fi
-
+#Мониторинг юзеров Новосозданных#
+mysql_array "SELECT id FROM users WHERE active_vpn=1" | while read i; do
+ID=($i)
+A_NUM=`mysql_one "SELECT COUNT(*) FROM new_accounts WHERE user_id=${ID[0]}"`
+#Если кол-во
+if [ "${A_NUM}" -eq "0" ]
+then
+echo "Юзверьей для создания новых временных аккаунтов больше нет, меняем статус аккаунта"
+mysql_one "UPDATE users SET active_vpn=2 WHERE id=${ID[0]};"
+reports "${ID[0]}" "1" "Создание VPN аккаунта" "VPN аккаунт создан, инструкции по подключению находятся в личном кабинете."
+fi 
 done

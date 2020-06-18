@@ -40,15 +40,12 @@ ${IPTABLES} -F FORWARD
 ${IPSET} -X
 #Запрещаем обмен пакетами между подсетями с 10.10.0.1 по 10.10.255.255
 ${IPTABLES} -A FORWARD -s 10.10.0.1/16 -d 10.10.0.1/16 -j DROP
-log "Формируем список активных аккаунтов"
+#Формируем список активных аккаунтов
 mysql_array "SELECT id,name,tarif_id FROM users where active_vpn=2" | while read i; do
 ID=($i)
-#Создаем новый список в IPSET
-${IPSET}} -N ${ID[1]} iphash
 mysql_array "SELECT public_key,ipAddress FROM accounts where status=1 and user_id=${ID[0]}" | while read i; do
 USER=($i)
-#Добавляем IP в список IPSet
-${IPSET} -A ${ID[1]} ${USER[1]}
+
 #Добавляем IP в конфиг tunsafe
 echo "Добавляем ПИРА в конфиг сервера"
 echo "" >> ${CONF_PATH}
@@ -56,19 +53,10 @@ echo "[Peer]" >> ${CONF_PATH}
 echo "#Peer #${ID[1]}" >> ${CONF_PATH}
 echo "PublicKey = ${USER[0]}" >> ${CONF_PATH}
 echo "AllowedIPs = ${USER[1]}/32" >> ${CONF_PATH}
-done
-#Формируем правила. Разрешаем доступ между юзеркими сетями
-${IPTABLES} -I FORWARD -m set --match-set ${ID[1]} src,dst -j ACCEPT
+
 ######Въебываем лимиты в соответсвии с таблицей
 BITE_LIMIT=`mysql_one "SELECT speed FROM tarifs where id=${ID[2]} limit 1"`
-#Чистим ограничения
-if [ -f /proc/net/ipt_ratelimit/${ID[1]}_download ];then echo / > /proc/net/ipt_ratelimit/${ID[1]}_download; fi
-if [ -f /proc/net/ipt_ratelimit/${ID[1]}_upload ];then echo / > /proc/net/ipt_ratelimit/${ID[1]}_upload; fi
-IPS=`${IPSET} ${ID[1]} -L  | sed '1,/Members/ d' | tr -s '\r\n' ',' | sed 's/.$//'`
-#Скачка (Download)
-${IPTABLES} -A FORWARD -m ratelimit --ratelimit-set ${ID[1]}_download --ratelimit-mode src -j DROP
-echo @+${IPS} ${BITE_LIMIT} > /proc/net/ipt_ratelimit/${ID[1]}_download
-#Загрузка (Upload)
-${IPTABLES} -A FORWARD -m ratelimit --ratelimit-set ${ID[1]}_upload --ratelimit-mode dst -j DROP
-echo @+${IPS} $((${BITE_LIMIT} / 2)) > /proc/net/ipt_ratelimit/${ID[1]}_upload
+limits "${ID[1]}" "${BITE_LIMIT}" "${USER[1]}"
+done
+
 done
