@@ -234,7 +234,7 @@ class AdminController extends Controller
                     ]);
                     Account::reguard();
                     Session::flash('success', 'Изменения внесены!');
-                    return redirect()->route('admin_user', ['action' => 'vpnlist', 'id' => $id]);
+                    return redirect()->route('admin_user', ['action' => 'vpnlist', 'id' => $vpn->user_id]);
 
                 } else {
                     return view('admin.usereditvpn')->with(['vpn' => $vpn]);
