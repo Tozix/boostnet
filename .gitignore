@@ -3,6 +3,7 @@
 /public/storage
 /public/js
 /bower_components
+/storage/logs/laravel.log
 /storage/*.key
 /vendor
 /.idea
