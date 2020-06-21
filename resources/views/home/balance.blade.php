@@ -11,13 +11,13 @@
  <tr><td class="active">Статус VPN:</td><td><span class="badge badge-pill badge-warning">Новый</span></td></tr>
         @break
     @case(1)
- <tr><td class="active">Статус VPN:</td><td><span class="badge badge-pill badge-warning">В настройке</span></td></tr>
+ <tr><td class="active">Статус VPN:</td><td><span class="badge badge-pill badge-primary">В настройке</span></td></tr>
         @break 
     @case(2)
  <tr><td class="active">Статус VPN:</td><td><span class="badge badge-pill badge-success">Активен</span></td></tr>
         @break
     @case(3)
- <tr><td class="active">Статус VPN:</td><td><span class="badge badge-pill badge-danger">Неактивен</span></td></tr>
+ <tr><td class="active">Статус VPN:</td><td><span class="badge badge-pill badge-light">Неактивен</span></td></tr>
         @break
     @case(8)
  <tr><td class="active">Статус VPN:</td><td><span class="badge badge-pill badge-warning">Доп. настройка</span></td></tr>

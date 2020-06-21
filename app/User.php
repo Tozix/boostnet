@@ -37,6 +37,12 @@ class User extends Authenticatable
     {
         return $this->hasOne('BoostNet\Tarif', 'id', 'tarif_id');
     }
+  
+    public function tarif_list()
+    {
+        $list = Tarif::all();
+        return $list;
+    }
      public function accounts()
     {
         return $this->hasMany('BoostNet\Account');

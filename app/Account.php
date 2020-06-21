@@ -8,7 +8,7 @@ class Account extends Model
 {
     public $timestamps = false;
     protected $fillable = [
-        'user_id', 'ip'
+        'user_id', 'ip', 'name'
     ];
     protected $hidden = [
         'public_key', 'private_key'

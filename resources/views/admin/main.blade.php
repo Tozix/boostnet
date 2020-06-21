@@ -15,13 +15,13 @@
 <div class="row">
                         <div class="col-md-3 mb-4">
 <div class="list-group">
-  <a href="{{ route('admin')}}" class="list-group-item list-group-item-action {{ Request::is('admin') ? 'active' : '' }}">Главная</a>
-  <a href="{{ route('admin_user')}}" class="list-group-item list-group-item-action {{ Request::is('admin/user*') ? 'active' : '' }} ">Пользователи</a>
-  <a href="{{ route('admin_org')}}" class="list-group-item list-group-item-action {{ Request::is('admin/org*') ? 'active' : '' }} ">Организации</a>
-  <a href="{{ route('admin_tarif')}}" class="list-group-item list-group-item-action {{ Request::is('admin/tarif*') ? 'active' : '' }} ">Тарифы</a>
-  <a href="{{ route('admin_server')}}" class="list-group-item list-group-item-action {{ Request::is('admin/server*') ? 'active' : '' }} ">Сервера</a>
-  <a href="{{ route('admin_payments')}}" class="list-group-item list-group-item-action {{ Request::is('admin_payments') ? 'active' : '' }}">Платежи  </a>
-  <a href="{{ route('admin_mailing')}}" class="list-group-item list-group-item-action {{ Request::is('admin_mailing') ? 'active' : '' }}">Рассылка  </a>
+  <a href="{{ route('admin')}}" class="list-group-item list-group-item-action {{ Request::is('admin') ? 'active' : '' }}"><i class="fa fa-swatchbook"></i> Главная</a>
+  <a href="{{ route('admin_user')}}" class="list-group-item list-group-item-action {{ Request::is('admin/user*') ? 'active' : '' }} "><i class="fa fa-users"></i> Пользователи</a>
+  <a href="{{ route('admin_org')}}" class="list-group-item list-group-item-action {{ Request::is('admin/org*') ? 'active' : '' }} "><i class="fa fa-user-tie"></i> Организации</a>
+  <a href="{{ route('admin_tarif')}}" class="list-group-item list-group-item-action {{ Request::is('admin/tarif*') ? 'active' : '' }} "><i class="fa fa-ruble-sign"></i> Тарифы</a>
+  <a href="{{ route('admin_server')}}" class="list-group-item list-group-item-action {{ Request::is('admin/server*') ? 'active' : '' }} "><i class="fa fa-server"></i> Сервера</a>
+  <a href="{{ route('admin_payments')}}" class="list-group-item list-group-item-action {{ Request::is('admin_payments') ? 'active' : '' }}"><i class="fa fa-coins"></i> Платежи  </a>
+  <a href="{{ route('admin_mailing')}}" class="list-group-item list-group-item-action {{ Request::is('admin_mailing') ? 'active' : '' }}"><i class="fa fa-mail-bulk"></i> Рассылка  </a>
 
 </div>
                     </div>
