@@ -52,7 +52,7 @@
         <a class="nav-link {{ Request::is('tarifs') ? 'active' : '' }}" href="{{ route('tarifs') }}">Тарифы и стоимость</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('tarifs') ? 'active' : '' }}" href="{{ route('tarifs') }}">Оплатить</a>
+        <a class="nav-link {{ Request::is('tarifs') ? 'active' : '' }}" href="{{ route('tarifs') }}">Тарифы и стоимость</a>
       </li>
                     </ul>
 
