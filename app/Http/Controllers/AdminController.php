@@ -37,7 +37,6 @@ class AdminController extends Controller
     return view('admin.main')->with(['balance' => $user,
     'status' => $user->active_vpn,
     'tarif'   => $tarif]); */
-
     }
 
     private function format_price($value)
@@ -62,13 +61,16 @@ class AdminController extends Controller
             $num = $num % 10;
         }
         switch ($num) {
-            case 1:$rub = 'рубль';
+            case 1:
+                $rub = 'рубль';
                 break;
             case 2:
             case 3:
-            case 4:$rub = 'рубля';
+            case 4:
+                $rub = 'рубля';
                 break;
-            default:$rub = 'рублей';
+            default:
+                $rub = 'рублей';
         }
 
         return $str . ' ' . $rub . ' ' . $value[1] . ' копеек.';
@@ -92,7 +94,8 @@ class AdminController extends Controller
                 'unit' => 'шт',
                 'price' => 200,
                 'nds' => 0,
-            ));
+            )
+        );
 
         $img_path = storage_path('sign');
 
@@ -103,7 +106,8 @@ class AdminController extends Controller
         }
 
         $dompdf = new Dompdf();
-        $html = view('docshab.schet')->with(['number' => '1',
+        $html = view('docshab.schet')->with([
+            'number' => '1',
             'date' => '5 декабря 2018г.',
             'total_num' => $total,
             'total_format' => $this->format_price($total),
@@ -111,7 +115,8 @@ class AdminController extends Controller
             'count_prods' => count($prods),
             'img_path' => $img_path,
             'total_text' => $this->str_price($total),
-            'pokupatel' => 'ООО "Рога и копыта"']);
+            'pokupatel' => 'ООО "Рога и копыта"'
+        ]);
         $dompdf->loadHtml($html, 'utf-8');
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
@@ -171,7 +176,6 @@ class AdminController extends Controller
                     Server::reguard();
                     Session::flash('success', 'Сервер ' . $server->name . ' успешно добавлен в систему!');
                     return redirect()->route('admin_server', ['action' => $action]);
-
                 } else {
                     return view('admin.serveradd');
                 }
@@ -208,7 +212,6 @@ class AdminController extends Controller
                     Server::reguard();
                     Session::flash('success', 'Сервер успешно изменен!');
                     return redirect()->route('admin_server', ['action' => $action, 'id' => $server->id]);
-
                 } else {
                     return view('admin.serveredit')->with(['server' => $server]);
                 }
@@ -235,7 +238,6 @@ class AdminController extends Controller
                     Account::reguard();
                     Session::flash('success', 'Изменения внесены!');
                     return redirect()->route('admin_user', ['action' => 'vpnlist', 'id' => $vpn->user_id]);
-
                 } else {
                     return view('admin.usereditvpn')->with(['vpn' => $vpn]);
                 }
@@ -263,7 +265,6 @@ class AdminController extends Controller
                     User::reguard();
                     Session::flash('success', 'Изменения внесены!');
                     return redirect()->route('admin_user', ['action' => $action, 'id' => $user->id]);
-
                 } else {
                     $tarif_list = Tarif::where('status', '1')->get();
                     return view('admin.useredit')->with(['user' => $user, 'tarif_list' => $tarif_list]);
@@ -275,24 +276,24 @@ class AdminController extends Controller
                 if ($request->isMethod('post')) {
                     $s_conf = Server::where('id', $request->server_id)->first();
                     //dd($s_conf);
-                    if($request->internet==='on') $allowedip='0.0.0.0/0';
-                    else $allowedip=$vpn->ipAddress.'/24'; 
-                    if($request->tunnel==='on') {
-                        $endpoint='tcp://127.0.0.1:5555';
-                        $excludedips='8.8.8.8/32,'.$s_conf->ip.'/24,176.58.123.25/24,94.25.232.0/24,94.25.208.0/24';
+                    if ($request->internet === 'on') $allowedip = '0.0.0.0/0';
+                    else $allowedip = $vpn->ipAddress . '/24';
+                    if ($request->tunnel === 'on') {
+                        $endpoint = 'tcp://127.0.0.1:5555';
+                        $excludedips = '8.8.8.8/32,' . $s_conf->ip . '/24,176.58.123.25/24,94.25.232.0/24,94.25.208.0/24';
                     } else {
-                        $endpoint=$s_conf->domain.':35053';
-                        $excludedips='8.8.8.8/24,'.$s_conf->ip.'';
-                    } 
+                        $endpoint = $s_conf->domain . ':35053';
+                        $excludedips = '8.8.8.8/24,' . $s_conf->ip . '';
+                    }
                     $config = '[Interface]
-Address = '.$vpn->ipAddress.'/24
-PrivateKey = '.$vpn->private_key.'
+Address = ' . $vpn->ipAddress . '/24
+PrivateKey = ' . $vpn->private_key . '
 DNS = 8.8.8.8,8.8.4.4,1.1.1.1
-ExcludedIPs = '.$excludedips.'
+ExcludedIPs = ' . $excludedips . '
 [Peer]
 PublicKey = oDdrze88EEQ8kO71XHz42NDYRlhiL6xc7uha49EPhGE=
-AllowedIPs = '.$allowedip.'
-Endpoint = '.$endpoint.'
+AllowedIPs = ' . $allowedip . '
+Endpoint = ' . $endpoint . '
 PersistentKeepalive = 25';
                     Session::flash('success', $config);
                     return view('admin.uservpnconf')->with(['vpn' => $vpn, 'server' => $server, 'server_id' => $request->server_id, 'internet' => $request->internet, 'tunnel' => $request->tunnel]);
@@ -382,7 +383,6 @@ PersistentKeepalive = 25';
                     Tarif::reguard();
                     Session::flash('success', 'Тариф успешно изменен!');
                     return redirect()->route('admin_tarif', ['action' => $action, 'id' => $tarif->id]);
-
                 } else {
                     return view('admin.tarifedit')->with(['tarif' => $tarif]);
                 }
@@ -414,7 +414,6 @@ PersistentKeepalive = 25';
                     Tarif::reguard();
                     Session::flash('success', 'Тариф ' . $tarif->name . ' успешно добавлен в систему!');
                     return redirect()->route('admin_tarif', ['action' => $action]);
-
                 } else {
                     return view('admin.tarifadd');
                 }
@@ -425,7 +424,6 @@ PersistentKeepalive = 25';
                 return view('admin.tariflist')->withData($data);
                 break;
         }
-
     }
 
     public function org($action = 'def', $id = null, Request $request)
@@ -506,11 +504,9 @@ PersistentKeepalive = 25';
                         ]);
                         Org::reguard();
                         Session::flash('success', 'Организация ' . $org->name . ' успешно добавлена в систему.<hr> Данные для входа в систему:<br>Login: ' . $org->org_email . '<br>Пароль: ' . $clear_password . ' не проебите, иначе придется менять пароль.');
-
                     } else {
                         return redirect()->back()->withErrors(['org_email' => ['Организация с такой почтой уже зарегистрирована в системе']])->withInput();
                     }
-
                 }
 
                 return view('admin.orgadd');
@@ -570,8 +566,8 @@ PersistentKeepalive = 25';
                     Org::reguard();
                     Session::flash('success', 'Изменения внесены!');
                     return redirect()->route('admin_org', ['action' => $action, 'id' => $org->id]);
-
-                }return view('admin.orgedit')->with(['org' => $org]);
+                }
+                return view('admin.orgedit')->with(['org' => $org]);
                 break;
             case "def":
                 $data = Org::all();
@@ -579,5 +575,4 @@ PersistentKeepalive = 25';
                 break;
         }
     }
-
 }

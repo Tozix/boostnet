@@ -8,15 +8,15 @@ use BoostNet\Tarif;
 
 class ContentController extends Controller
 {
-   
+
     public function ServerList()
     {
-        $server= Server::where('status','1')->get();
-        return view('welcome')->withData($server);
+        $server = Server::where('status', '1')->get();
+        return view('speedtest')->withData($server);
     }
     public function TarifList()
     {
-        $tarif = Tarif::where('status','1')->get();
-        return view('tarifs')->withData($tarif); 
+        $tarif = Tarif::where('status', '1')->get();
+        return view('tarifs')->withData($tarif);
     }
 }

@@ -159,6 +159,7 @@ return [
         /*
          * Application Service Providers...
          */
+        BoostNet\Providers\ComposerServiceProvider::class,
         BoostNet\Providers\AppServiceProvider::class,
         BoostNet\Providers\AuthServiceProvider::class,
         // BoostNet\Providers\BroadcastServiceProvider::class,
