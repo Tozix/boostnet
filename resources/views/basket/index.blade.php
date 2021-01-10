@@ -74,6 +74,7 @@
                         <th></th>
                     </tr>
                 </table>
+                <a href="{{ route('basket.checkout') }}" class="btn btn-dark float-right">Оформить заказ</a>
             @else
                 <p>Ваша корзина пуста</p>
             @endif

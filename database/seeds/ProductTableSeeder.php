@@ -7,6 +7,6 @@ class ProductTableSeeder extends Seeder
     public function run()
     {
         // создать 12 товаров
-        factory(BoostNet\Product::class, 12)->create();
+        factory(BoostNet\Models\Product::class, 12)->create();
     }
 }

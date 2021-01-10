@@ -1,11 +1,18 @@
 <?php
 
-namespace BoostNet;
+namespace BoostNet\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    protected $fillable = [
+        'parent_id',
+        'name',
+        'slug',
+        'content',
+        'image',
+    ];
     /**
      * Связь «товар принадлежит» таблицы `products` с таблицей `categories`
      */

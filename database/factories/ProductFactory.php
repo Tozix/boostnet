@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use BoostNet\Product;
+use BoostNet\Models\Product;
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 

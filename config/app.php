@@ -150,7 +150,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Chumper\Zipper\ZipperServiceProvider::class,
         'Buzz\LaravelGoogleCaptcha\CaptchaServiceProvider',
-        
+
 
         /*
          * Package Service Providers...
@@ -159,6 +159,7 @@ return [
         /*
          * Application Service Providers...
          */
+        Intervention\Image\ImageServiceProvider::class,
         BoostNet\Providers\ComposerServiceProvider::class,
         BoostNet\Providers\AppServiceProvider::class,
         BoostNet\Providers\AuthServiceProvider::class,
@@ -181,6 +182,7 @@ return [
 
     'aliases' => [
 
+        'Image' => Intervention\Image\Facades\Image::class,
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,

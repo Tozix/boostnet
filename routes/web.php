@@ -66,6 +66,8 @@ Route::post('/basket/plus/{id}', 'BasketController@plus')->where('id', '[0-9]+')
 Route::post('/basket/minus/{id}', 'BasketController@minus')->where('id', '[0-9]+')->name('basket.minus');
 Route::post('/basket/remove/{id}', 'BasketController@remove')->where('id', '[0-9]+')->name('basket.remove');
 Route::post('/basket/clear', 'BasketController@clear')->name('basket.clear');
+Route::post('/basket/saveorder', 'BasketController@saveOrder')->name('basket.saveorder');
+Route::get('/basket/success', 'BasketController@success')->name('basket.success');
 
 
 //Контент роуты
@@ -79,13 +81,44 @@ Route::prefix('speedtest')->name('speedtest')->group(function () {
     Route::match(['get', 'post'], 'getip', 'SpeedTestController@getip')->name('getip');
     Route::match(['get', 'post'], 'result', 'SpeedTestController@result')->name('result');
 });
-Route::match(['get', 'post'], '/pdf', 'AdminController@pdf');
 
+//Route::match(['get', 'post'], '/pdf', 'AdminController@pdf');
 
 Auth::routes();
 
+//Админка каталога
+Route::group([
+    'as' => 'admin.catalog.', // имя маршрута, например admin.index
+    'prefix' => 'admin/catalog', // префикс маршрута, например admin/index
+    'namespace' => 'Admin', // пространство имен контроллера
+    'middleware' => ['auth', 'check-permission:admin'] // один или несколько посредников
+], function () {
+    // CRUD-операции над категориями каталога
+    Route::resource('category', 'CategoryController');
+    // CRUD-операции над брендами каталога
+    Route::resource('brand', 'BrandController');
+    // CRUD-операции над товарами каталога
+    Route::resource('product', 'ProductController');
+    // доп.маршрут для просмотра товаров категории
+    Route::get('product/category/{category}', 'ProductController@category')
+        ->name('product.category');
+});
+
+Route::group([
+    'as' => 'admin.', // имя маршрута, например admin.index
+    'prefix' => 'admin', // префикс маршрута, например admin/index
+    'namespace' => 'Admin', // пространство имен контроллера
+    'middleware' => ['auth', 'check-permission:admin'] // один или несколько посредников
+], function () {
+    // главная страница панели управления
+    Route::get('index', 'IndexController')->name('index');
+});
+
+
+
+
 Route::group(['middleware' => 'auth'], function () {
-    /*Админка */
+    /*Админка 
     Route::get('admin', ['middleware' => 'check-permission:admin', 'uses' => 'AdminController@index'])->name('admin');
     //Route::get('pdf',['middleware'=>'check-permission:admin','uses'=>'AdminController@pdf'])->name('pdf');
     //Юзьвери
@@ -100,7 +133,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('admin_payments', ['middleware' => 'check-permission:admin', 'uses' => 'AdminController@index'])->name('admin_payments');
     //Рассылка
     Route::get('admin_mailing', ['middleware' => 'check-permission:admin', 'uses' => 'AdminController@index'])->name('admin_mailing');
-
+*/
 
     /* Пользовательские маршруты */
     //Роуты для юр лиц
@@ -112,4 +145,4 @@ Route::group(['middleware' => 'auth'], function () {
     Route::match(['get', 'post'], 'u_tarifs', ['middleware' => 'check-permission:user|admin', 'uses' => 'HomeController@ChangeTarif'])->name('u_tarifs');
     Route::match(['get', 'post'], 'payment', ['middleware' => 'check-permission:user|admin', 'uses' => 'HomeController@showPayForm'])->name('payment');
 });
-//Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home');

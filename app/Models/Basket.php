@@ -1,6 +1,6 @@
 <?php
 
-namespace BoostNet;
+namespace BoostNet\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -95,5 +95,13 @@ class Basket extends Model
             return 0;
         }
         return self::getBasket()->products->count();
+    }
+
+        public function getAmount() {
+        $amount = 0.0;
+        foreach ($this->products as $product) {
+            $amount = $amount + $product->price * $product->pivot->quantity;
+        }
+        return $amount;
     }
 }

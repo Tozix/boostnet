@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Session;
 
-class AdminController extends Controller
+class AdminOldController extends Controller
 {
     /**
      * Create a new controller instance.

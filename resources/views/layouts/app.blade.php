@@ -9,7 +9,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ $title ?? config('app.name', 'Laravel')  }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -99,7 +99,7 @@
                                     </a>
                                     <a class="dropdown-item" href="{{ route('home') }}">Личный кабинет</a>
                                     @if (checkPermission(['admin']))
-                                        <a class="dropdown-item" href="{{ route('admin') }}">Админко</a>
+                                        <a class="dropdown-item" href="{{ route('admin.index') }}">Админко</a>
                                         <a class="dropdown-item" href="{{ route('home_org') }}">ЛК юр. лица</a>
                                     @endif
 

@@ -19,14 +19,15 @@ class CreateBasketProductTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->unsignedTinyInteger('quantity');
 
+
             $table->foreign('basket_id')
-                ->references('id')
-                ->on('baskets')
-                ->cascadeOnDelete();
+            ->references('id')
+            ->on('baskets')
+            ->OnDelete('cascade');
             $table->foreign('product_id')
-                ->references('id')
-                ->on('products')
-                ->cascadeOnDelete();
+            ->references('id')
+            ->on('products')
+            ->OnDelete('cascade');
         });
     }
 

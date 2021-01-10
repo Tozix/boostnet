@@ -2,9 +2,9 @@
 
 namespace BoostNet\Http\Controllers;
 
-use BoostNet\Brand;
-use BoostNet\Category;
-use BoostNet\Product;
+use BoostNet\Models\Brand;
+use BoostNet\Models\Category;
+use BoostNet\Models\Product;
 use Illuminate\Http\Request;
 
 class CatalogController extends Controller

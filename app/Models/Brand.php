@@ -1,11 +1,18 @@
 <?php
 
-namespace BoostNet;
+namespace BoostNet\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Brand extends Model
 {
+
+    protected $fillable = [
+        'name',
+        'slug',
+        'content',
+        'image',
+    ];
     /**
      * Связь «один ко многим» таблицы `brands` с таблицей `products`
      *
@@ -22,7 +29,8 @@ class Brand extends Model
      * чаще всего. Но поскольку таких данных у нас еще нет,
      * просто получаем 5 брендов с наибольшим кол-вом товаров
      */
-    public static function popular() {
+    public static function popular()
+    {
         return self::withCount('products')->orderByDesc('products_count')->limit(5)->get();
     }
 }

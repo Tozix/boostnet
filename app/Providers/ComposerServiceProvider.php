@@ -4,9 +4,10 @@ namespace BoostNet\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
-use BoostNet\Brand;
-use BoostNet\Category;
-use BoostNet\Basket;
+use BoostNet\Models\Brand;
+use BoostNet\Models\Category;
+use BoostNet\Models\Basket;
+
 class ComposerServiceProvider extends ServiceProvider
 {
     /**
@@ -14,7 +15,8 @@ class ComposerServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register() {
+    public function register()
+    {
         // .....
     }
 
@@ -23,18 +25,16 @@ class ComposerServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot() {
-        View::composer('catalog.part.roots', function($view) {
-            $view->with(['items' => Category::roots()]);
+    public function boot()
+    {
+        View::composer('layouts.part.roots', function ($view) {
+            $view->with(['items' => Category::all()]);
         });
-        View::composer('catalog.part.brands', function($view) {
+        View::composer('layouts.part.brands', function ($view) {
             $view->with(['items' => Brand::popular()]);
         });
-        View::composer('layouts.app', function($view) {
+        View::composer('layouts.app', function ($view) {
             $view->with(['positions' => Basket::getCount()]);
         });
-        
     }
-
 }
-
