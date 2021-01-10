@@ -4,26 +4,8 @@
 <div class="container">
 	<div class="row justify-content-center">
 		<div class="col-md-12">
-
-
-
-
-
-
-
-
 			<div class="row">
-
-
-
-
-				
-
-
-
-
 				<div class="col-md-6 mb-4">
-					
 						<div class="card-body">
 							<h4>Доступный безлимитный интернет!</h4>
 							<hr>
@@ -34,7 +16,7 @@
 
 							 
 						</div>
-						<div class="text-center"><a class="btn btn-primary btn-lg" href="{{ route('register') }}">Стать клиентом!</a></div>
+						<div class="text-center"><a class="btn btn-primary btn-lg" href="{{ route('user.register') }}">Стать клиентом!</a></div>
 					
 				</div>
 
@@ -56,11 +38,7 @@
 
 
 	<hr>
-
-
-
-
-			<!-- Content Row -->
+				<!-- Content Row -->
 			<div class="row">
 				<div class="col-md-4 mb-4">
 					<div class="card h-100">
@@ -125,7 +103,7 @@
 </div>
 @endsection
 @push('styles')
-<link href="/css/speedtest.css" rel="stylesheet">
+
 @endpush
 @push('scripts')
 @endpush

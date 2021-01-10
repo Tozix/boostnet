@@ -12,7 +12,7 @@
   </a>
   <a href="{{ route('tarifs')}}" class="list-group-item list-group-item-action {{ Request::is('tarifs') ? 'active' : '' }} ">Тарифные планы
   </a>
-  <a href="{{ route('openvpn')}}" class="list-group-item list-group-item-action {{ Request::is('openvpn') ? 'active' : '' }}">Инструкции OpenVPN
+  <a href="#" class="list-group-item list-group-item-action {{ Request::is('openvpn') ? 'active' : '' }}">Инструкции OpenVPN
   </a>
 
       <a href="{{ route('payment')}}" class="list-group-item list-group-item-action {{ Request::is('payment') ? 'active' : '' }}">Оплата

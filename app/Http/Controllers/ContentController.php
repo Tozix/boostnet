@@ -3,8 +3,8 @@
 namespace BoostNet\Http\Controllers;
 
 use Illuminate\Http\Request;
-use BoostNet\Server;
-use BoostNet\Tarif;
+use BoostNet\Models\Server;
+use BoostNet\Models\Tarif;
 
 class ContentController extends Controller
 {

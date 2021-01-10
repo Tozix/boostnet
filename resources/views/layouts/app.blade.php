@@ -76,9 +76,9 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
-                            <li><a class="nav-link" href="{{ route('login') }}"><i class="fa fa-user"></i> Личный
-                                    кабинет</a></li>
-                            
+                        <li><a class="nav-link" href="{{ route('user.login') }}"><i class="fa fa-user"></i> Личный
+                                кабинет</a></li>
+
                         @else
 
 
@@ -86,37 +86,37 @@
 
 
 
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    <i class="fa fa-user-tie"></i> {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <i class="fa fa-user-tie"></i> {{ Auth::user()->name }} <span class="caret"></span>
+                            </a>
 
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('user.logout') }}" onclick="event.preventDefault();
                                                              document.getElementById('logout-form').submit();">
-                                        Выйти
-                                    </a>
-                                    <a class="dropdown-item" href="{{ route('home') }}">Личный кабинет</a>
-                                    @if (checkPermission(['admin']))
-                                        <a class="dropdown-item" href="{{ route('admin.index') }}">Админко</a>
-                                        <a class="dropdown-item" href="{{ route('home_org') }}">ЛК юр. лица</a>
-                                    @endif
+                                    Выйти
+                                </a>
+                                <a class="dropdown-item" href="{{ route('home') }}">Личный кабинет</a>
+                                @if (checkPermission(['admin']))
+                                <a class="dropdown-item" href="{{ route('admin.index') }}">Админко</a>
+                                <a class="dropdown-item" href="#">ЛК юр. лица</a>
+                                @endif
 
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                        style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
+                                <form id="logout-form" action="{{ route('user.logout') }}" method="POST"
+                                    style="display: none;">
+                                    @csrf
+                                </form>
+                            </div>
+                        </li>
                         @endguest
-    <li class="nav-item">
-        <a class="nav-link @if ($positions) text-success @endif" href="{{ route('basket.index') }}">
-            Корзина
-            @if ($positions) ({{ $positions }}) @endif
-        </a>
-    </li>
+                        <li class="nav-item">
+                            <a class="nav-link @if ($positions) text-success @endif" href="{{ route('basket.index') }}">
+                                Корзина
+                                @if ($positions) ({{ $positions }}) @endif
+                            </a>
+                        </li>
 
                     </ul>
                 </div>

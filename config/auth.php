@@ -67,7 +67,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => BoostNet\User::class,
+            'model' => BoostNet\Models\User::class,
         ],
 
         // 'users' => [
