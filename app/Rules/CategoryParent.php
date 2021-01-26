@@ -1,9 +1,9 @@
 <?php
 
-namespace BoostNet\Rules;
+namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use BoostNet\Models\Category;
+use App\Models\Category;
 
 class CategoryParent implements Rule
 {

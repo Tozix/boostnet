@@ -1,11 +1,11 @@
 <?php
 
-namespace BoostNet\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin;
 
-use BoostNet\Helpers\ImageSaver;
-use BoostNet\Models\Brand;
-use BoostNet\Http\Controllers\Controller;
-use BoostNet\Http\Requests\BrandCatalogRequest;
+use App\Helpers\ImageSaver;
+use App\Models\Brand;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\BrandCatalogRequest;
 
 class BrandController extends Controller
 {

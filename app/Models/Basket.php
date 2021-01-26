@@ -1,6 +1,6 @@
 <?php
 
-namespace BoostNet\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -72,7 +72,8 @@ class Basket extends Model
         $this->touch();
     }
 
-    public static function getBasket() {
+    public static function getBasket()
+    {
         $basket_id = request()->cookie('basket_id');
         if (!empty($basket_id)) {
             try {
@@ -89,7 +90,8 @@ class Basket extends Model
     /**
      * Возвращает количество позиций в корзине
      */
-    public static function getCount() {
+    public static function getCount()
+    {
         $basket_id = request()->cookie('basket_id');
         if (empty($basket_id)) {
             return 0;
@@ -97,7 +99,8 @@ class Basket extends Model
         return self::getBasket()->products->count();
     }
 
-        public function getAmount() {
+    public function getAmount()
+    {
         $amount = 0.0;
         foreach ($this->products as $product) {
             $amount = $amount + $product->price * $product->pivot->quantity;

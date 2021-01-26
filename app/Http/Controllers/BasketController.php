@@ -1,10 +1,10 @@
 <?php
 
-namespace BoostNet\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use BoostNet\Models\Basket;
-use BoostNet\Models\Order;
+use App\Models\Basket;
+use App\Models\Order;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Cookie;
 
@@ -29,21 +29,37 @@ class BasketController extends Controller
     /**
      * Форма оформления заказа
      */
-    public function checkout()
+    public function checkout(Request $request)
     {
-        return view('basket.checkout');
+        $profile = null;
+        $profiles = null;
+        if (auth()->check()) { // если пользователь аутентифицирован
+            $user = auth()->user();
+            // ...и у него есть профили для оформления
+            $profiles = $user->profiles;
+            // ...и был запрошен профиль для оформления
+            $prof_id = (int)$request->input('profile_id');
+            if ($prof_id) {
+                $profile = $user->profiles()->whereIdAndUserId($prof_id, $user->id)->first();
+            }
+        }
+        return view('basket.checkout', compact('profiles', 'profile'));
     }
 
-    /**
-     * Добавляет товар с идентификатором $id в корзину
-     */
     public function add(Request $request, $id)
     {
         $quantity = $request->input('quantity') ?? 1;
         $this->basket->increase($id, $quantity);
-        // выполняем редирект обратно на ту страницу,
-        // где была нажата кнопка «В корзину»
-        return back();
+        if (!$request->ajax()) {
+            // выполняем редирект обратно на ту страницу,
+            // где была нажата кнопка «В корзину»
+            return back();
+        }
+        // в случае ajax-запроса возвращаем html-код корзины в правом
+        // верхнем углу, чтобы заменить исходный html-код, потому что
+        // теперь количество позиций будет другим
+        $positions = $this->basket->products->count();
+        return view('basket.part.basket', compact('positions'));
     }
 
     /**
@@ -141,5 +157,30 @@ class BasketController extends Controller
             // ему здесь делать нечего — отправляем на страницу корзины
             return redirect()->route('basket.index');
         }
+    }
+
+    /**
+     * Возвращает профиль пользователя в формате JSON
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function profile(Request $request)
+    {
+        if (!$request->ajax()) {
+            abort(404);
+        }
+        if (!auth()->check()) {
+            return response()->json(['error' => 'Нужна авторизация!'], 404);
+        }
+        $user = auth()->user();
+        $profile_id = (int)$request->input('profile_id');
+        if ($profile_id) {
+            $profile = $user->profiles()->whereIdAndUserId($profile_id, $user->id)->first();
+            if ($profile) {
+                return response()->json(['profile' => $profile]);
+            }
+        }
+        return response()->json(['error' => 'Профиль не найден!'], 404);
     }
 }

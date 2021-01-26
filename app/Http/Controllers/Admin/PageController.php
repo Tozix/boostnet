@@ -1,10 +1,10 @@
 <?php
 
-namespace BoostNet\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin;
 
-use BoostNet\Models\Page;
+use App\Models\Page;
 use Illuminate\Http\Request;
-use BoostNet\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 
 class PageController extends Controller

@@ -1,12 +1,14 @@
 <?php
 
-namespace BoostNet\Providers;
+namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
-use BoostNet\Models\Brand;
-use BoostNet\Models\Category;
-use BoostNet\Models\Basket;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Basket;
+use App\Models\Page;
+
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -35,6 +37,9 @@ class ComposerServiceProvider extends ServiceProvider
         });
         View::composer('layouts.app', function ($view) {
             $view->with(['positions' => Basket::getCount()]);
+        });
+        View::composer('layouts.part.pages', function ($view) {
+            $view->with(['pages' => Page::all()]);
         });
     }
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace BoostNet\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use BoostNet\Models\Server;
-use BoostNet\Models\Tarif;
+use App\Models\Server;
+use App\Models\Tarif;
 
 class ContentController extends Controller
 {

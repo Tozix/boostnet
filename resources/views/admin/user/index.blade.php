@@ -27,5 +27,5 @@
     </tr>
     @endforeach
 </table>
-{{ $users->links() }}
+{{ $users->links('layouts.pagination') }}
 @endsection

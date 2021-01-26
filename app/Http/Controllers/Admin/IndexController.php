@@ -1,9 +1,9 @@
 <?php
 
-namespace BoostNet\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use BoostNet\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 
 class IndexController extends Controller
 {

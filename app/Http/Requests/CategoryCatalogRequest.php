@@ -1,8 +1,8 @@
 <?php
 
-namespace BoostNet\Http\Requests;
+namespace App\Http\Requests;
 
-use BoostNet\Rules\CategoryParent;
+use App\Rules\CategoryParent;
 
 class CategoryCatalogRequest extends CatalogRequest
 {

@@ -1,17 +1,18 @@
 <?php
 
-namespace BoostNet\Models;
+namespace App\Models;
 
+use App\Permissions\HasPermissionsTrait;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use BoostNet\Notifications\ResetPassword;
-use Illuminate\Database\Eloquent\Model;
+use App\Notifications\ResetPassword;
+//use Illuminate\Database\Eloquent\Model;
 
 class User extends Authenticatable
 {
     use Notifiable;
-
+    use HasPermissionsTrait; //Import The Trait
     /**
      * The attributes that are mass assignable.
      *
@@ -52,5 +53,15 @@ class User extends Authenticatable
     public function accounts()
     {
         return $this->hasMany(Account::class);
+    }
+    //Профили пользователей для заказов
+    /**
+     * Связь «один ко многим» таблицы `users` с таблицей `profiles`
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function profiles()
+    {
+        return $this->hasMany(Profile::class);
     }
 }

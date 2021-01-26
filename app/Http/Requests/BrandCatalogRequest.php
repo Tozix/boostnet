@@ -1,6 +1,6 @@
 <?php
 
-namespace BoostNet\Http\Requests;
+namespace App\Http\Requests;
 
 class BrandCatalogRequest  extends CatalogRequest
 {

@@ -11,10 +11,10 @@ let mix = require('laravel-mix');
  |
  */
 
-mix .js('resources/assets/js/app.js', 'public/js')
-    .sass('resources/assets/sass/app.scss', 'public/css')
-    .copy('resources/assets/js/stcore.js', 'public/js')
-    .copy('resources/assets/js/speedtest_worker.js', 'public/js')
-    .copy('resources/assets/js/speedtest.js', 'public/js')
+mix .js('resources/js/app.js', 'public/js')
+    .sass('resources/sass/app.scss', 'public/css')
+    .copy('resources/js/stcore.js', 'public/js')
+    .copy('resources/js/speedtest_worker.js', 'public/js')
+    .copy('resources/js/speedtest.js', 'public/js')
     .copy('node_modules/jquery/dist/jquery.min.js', 'public/js');
     

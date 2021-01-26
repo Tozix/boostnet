@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,19 +13,40 @@
 |
 */
 
+
 //Маршруты оплаты
-Route::match(['get', 'post'], '/pay_success', 'PayController@successPay');
-Route::match(['get', 'post'], '/pay_fail', 'PayController@failPay');
-Route::match(['get', 'post'], '/pay_result', 'PayController@resultPay');
+//Route::match(['get', 'post'], '/pay_success', 'PayController@successPay');
+//Route::match(['get', 'post'], '/pay_fail', 'PayController@failPay');
+//Route::match(['get', 'post'], '/pay_result', 'PayController@resultPay');
 
 
+Route::name('user.')->prefix('user')->group(function () {
+    // регистрация, вход в ЛК, восстановление пароля
+    Auth::routes();
+});
+//Профайл
+Route::group([
+    'as' => 'user.', // имя маршрута, например user.index
+    'prefix' => 'user', // префикс маршрута, например user/index
+    'middleware' => ['auth'] // один или несколько посредников
+], function () {
+    // главная страница личного кабинета пользователя
+    Route::get('index', 'HomeController@index')->name('index');
+    // CRUD-операции над профилями пользователя
+    Route::resource('profile', 'ProfileController');
+    // просмотр списка заказов в личном кабинете
+    Route::get('order', 'OrderController@index')->name('order.index');
+    // просмотр отдельного заказа в личном кабинете
+    Route::get('order/{order}', 'OrderController@show')->name('order.show');
+});
 
 
+Route::get('/roles', 'PermissionController@Permission');
 //Каталог
-Route::get('/catalog', 'CatalogController@index')->name('catalog.index');
-Route::get('/catalog/category/{slug}', 'CatalogController@category')->name('catalog.category');
-Route::get('/catalog/brand/{slug}', 'CatalogController@brand')->name('catalog.brand');
-Route::get('/catalog/product/{slug}', 'CatalogController@product')->name('catalog.product');
+Route::get('/catalog/index', 'CatalogController@index')->name('catalog.index');
+Route::get('/catalog/category/{category:slug}', 'CatalogController@category')->name('catalog.category');
+Route::get('/catalog/brand/{brand:slug}', 'CatalogController@brand')->name('catalog.brand');
+Route::get('/catalog/product/{product:slug}', 'CatalogController@product')->name('catalog.product');
 
 //Корзина вазелина
 Route::get('/basket/index', 'BasketController@index')->name('basket.index');
@@ -35,6 +58,7 @@ Route::post('/basket/remove/{id}', 'BasketController@remove')->where('id', '[0-9
 Route::post('/basket/clear', 'BasketController@clear')->name('basket.clear');
 Route::post('/basket/saveorder', 'BasketController@saveOrder')->name('basket.saveorder');
 Route::get('/basket/success', 'BasketController@success')->name('basket.success');
+Route::post('/basket/profile', 'BasketController@profile')->name('basket.profile');
 
 
 //Контент роуты
@@ -54,12 +78,9 @@ Route::get('/bower', function () {
     return view('services.bower');
 })->name('bower');
 
-Route::get('/cat', function () {
-    return view('catalog.index');
-});
 
 //Статичные страницы
-Route::get('/page/{page}', 'PageController')->name('page.show');
+Route::get('/page/{page:slug}', 'PageController')->name('page.show');
 
 //Speedtest
 Route::get('/speedtest', 'ContentController@ServerList')->name('speedtest');
@@ -72,10 +93,7 @@ Route::prefix('speedtest')->name('speedtest')->group(function () {
     Route::match(['get', 'post'], 'result', 'SpeedTestController@result')->name('result');
 });
 
-//Route::match(['get', 'post'], '/pdf', 'AdminController@pdf');
-Route::name('user.')->prefix('user')->group(function () {
-    Auth::routes();
-});
+
 //Домашка
 Route::match(['get', 'post'], 'payment', ['middleware' => 'check-permission:user|admin', 'uses' => 'HomeController@showPayForm'])->name('payment');
 Route::get('/home', 'HomeController@index')->name('home');
@@ -88,7 +106,7 @@ Route::group([
     'as' => 'admin.catalog.', // имя маршрута, например admin.index
     'prefix' => 'admin/catalog', // префикс маршрута, например admin/index
     'namespace' => 'Admin', // пространство имен контроллера
-    'middleware' => ['auth', 'check-permission:admin'] // один или несколько посредников
+    'middleware' => 'auth' // один или несколько посредников
 ], function () {
     // CRUD-операции над категориями каталога
     Route::resource('category', 'CategoryController');
@@ -109,7 +127,7 @@ Route::group([
     'as' => 'admin.', // имя маршрута, например admin.index
     'prefix' => 'admin', // префикс маршрута, например admin/index
     'namespace' => 'Admin', // пространство имен контроллера
-    'middleware' => ['auth', 'check-permission:admin'] // один или несколько посредников
+    'middleware' => 'auth' // один или несколько посредников
 ], function () {
     // главная страница панели управления
     Route::get('index', 'IndexController')->name('index');
@@ -127,48 +145,6 @@ Route::group([
         ->name('page.remove.image');
 });
 
+//Auth::routes();
 
-/* Пока не нужные маршруты
-Route::get('/getconfig/{file}', 'HomeController@download')->middleware('auth');
-
-Route::get('/faq', function () {
-    return view('faq');
-})->name('faq');
-
-Route::get('/openvpn', function () {
-    return view('home.openvpn');
-})->name('openvpn');
-
-
-
-
-Route::group(['middleware' => 'auth'], function () {
-    //Админка// 
-    Route::get('admin', ['middleware' => 'check-permission:admin', 'uses' => 'AdminController@index'])->name('admin');
-    //Route::get('pdf',['middleware'=>'check-permission:admin','uses'=>'AdminController@pdf'])->name('pdf');
-    //Юзьвери
-    Route::match(['get', 'post'], '/admin/user/{action?}/{id?}', ['middleware' => 'check-permission:admin', 'uses' => 'AdminController@user'])->name('admin_user');
-    //Сервера
-    Route::match(['get', 'post'], '/admin/server/{action?}/{id?}', ['middleware' => 'check-permission:admin', 'uses' => 'AdminController@server'])->name('admin_server');
-    //Тарифы
-    Route::match(['get', 'post'], '/admin/tarif/{action?}/{id?}', ['middleware' => 'check-permission:admin', 'uses' => 'AdminController@tarif'])->name('admin_tarif');
-    //Организации
-    Route::match(['get', 'post'], '/admin/org/{action?}/{id?}', ['middleware' => 'check-permission:admin', 'uses' => 'AdminController@org'])->name('admin_org');
-    //Платежи
-    Route::get('admin_payments', ['middleware' => 'check-permission:admin', 'uses' => 'AdminController@index'])->name('admin_payments');
-    //Рассылка
-    Route::get('admin_mailing', ['middleware' => 'check-permission:admin', 'uses' => 'AdminController@index'])->name('admin_mailing');
-
-
-    //Пользовательские маршруты //
-    //Роуты для юр лиц
-    Route::get('home_org', ['middleware' => 'check-permission:org_user|admin', 'uses' => 'HomeorgController@index'])->name('home_org');
-    Route::match(['get', 'post'], 'tarifs_org', ['middleware' => 'check-permission:org_user|admin', 'uses' => 'HomeorgController@ChangeTarif'])->name('tarifs_org');
-
-    //Роуты для физ лиц
-    Route::get('home', ['middleware' => 'check-permission:user|admin', 'uses' => 'HomeController@index'])->name('home');
-    Route::match(['get', 'post'], 'u_tarifs', ['middleware' => 'check-permission:user|admin', 'uses' => 'HomeController@ChangeTarif'])->name('u_tarifs');
-    Route::match(['get', 'post'], 'payment', ['middleware' => 'check-permission:user|admin', 'uses' => 'HomeController@showPayForm'])->name('payment');
-});
-
-*/
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

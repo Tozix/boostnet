@@ -2,20 +2,20 @@
 
 @section('admincontent')
 <h1>Все товары</h1>
-    <!-- Корневые категории для возможности навигации -->
-    <ul>
-        @foreach ($roots as $root)
-        <li>
-            <a href="{{ route('admin.catalog.product.category', ['category' => $root->id]) }}">
-                {{ $root->name }}
-            </a>
-        </li>
-        @endforeach
-    </ul>
-    <a href="{{ route('admin.catalog.product.create') }}" class="btn btn-success mb-4">
-        Создать товар
-    </a>
-    <table class="table table-bordered">
+<!-- Корневые категории для возможности навигации -->
+<ul>
+    @foreach ($roots as $root)
+    <li>
+        <a href="{{ route('admin.catalog.product.category', ['category' => $root->id]) }}">
+            {{ $root->name }}
+        </a>
+    </li>
+    @endforeach
+</ul>
+<a href="{{ route('admin.catalog.product.create') }}" class="btn btn-success mb-4">
+    Создать товар
+</a>
+<table class="table table-bordered">
     <tr>
         <th width="30%">Наименование</th>
         <th width="65%">Описание</th>
@@ -48,5 +48,6 @@
     </tr>
     @endforeach
 </table>
-{{ $products->links() }}
+
+{{ $products->links('layouts.pagination') }}
 @endsection

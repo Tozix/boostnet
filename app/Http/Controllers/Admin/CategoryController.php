@@ -1,12 +1,12 @@
 <?php
 
-namespace BoostNet\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin;
 
-use BoostNet\Helpers\ImageSaver;
-use BoostNet\Models\Category;
+use App\Helpers\ImageSaver;
+use App\Models\Category;
 use Illuminate\Http\Request;
-use BoostNet\Http\Controllers\Controller;
-use BoostNet\Http\Requests\CategoryCatalogRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryCatalogRequest;
 
 class CategoryController extends Controller
 {

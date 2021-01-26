@@ -1,9 +1,9 @@
 <?php
 
-namespace BoostNet\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use BoostNet\Models\Page;
+use App\Models\Page;
 
 class PageController extends Controller
 {

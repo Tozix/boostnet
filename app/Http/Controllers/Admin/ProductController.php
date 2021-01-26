@@ -1,13 +1,13 @@
 <?php
 
-namespace BoostNet\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin;
 
-use BoostNet\Helpers\ImageSaver;
-use BoostNet\Http\Controllers\Controller;
-use BoostNet\Models\Brand;
-use BoostNet\Models\Category;
-use BoostNet\Models\Product;
-use BoostNet\Http\Requests\ProductCatalogRequest;
+use App\Helpers\ImageSaver;
+use App\Http\Controllers\Controller;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
+use App\Http\Requests\ProductCatalogRequest;
 
 class ProductController extends Controller
 {
@@ -65,6 +65,11 @@ class ProductController extends Controller
      */
     public function store(ProductCatalogRequest $request)
     {
+        $request->merge([
+            'new' => $request->has('new'),
+            'hit' => $request->has('hit'),
+            'sale' => $request->has('sale'),
+        ]);
         $data = $request->all();
         $data['image'] = $this->imageSaver->upload($request, null, 'product');
         $product = Product::create($data);
@@ -108,6 +113,11 @@ class ProductController extends Controller
      */
     public function update(ProductCatalogRequest $request, Product $product)
     {
+        $request->merge([
+            'new' => $request->has('new'),
+            'hit' => $request->has('hit'),
+            'sale' => $request->has('sale'),
+        ]);
         $data = $request->all();
         $data['image'] = $this->imageSaver->upload($request, $product, 'product');
         $product->update($data);
@@ -115,7 +125,6 @@ class ProductController extends Controller
             ->route('admin.catalog.product.show', ['product' => $product->id])
             ->with('success', 'Товар был успешно обновлен');
     }
-
     /**
      * Удаляет товар каталога из базы данных
      *

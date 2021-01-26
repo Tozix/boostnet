@@ -16,8 +16,8 @@
     <script src="{{ asset('js/jquery.min.js') }}"></script>
 
     <!-- Fonts -->
-    <!-- <link rel="dns-prefetch" href="https://fonts.gstatic.com">-->
-    <!--  <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css"> -->
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -45,11 +45,7 @@
                         <li class="nav-item">
                             <a class="nav-link {{ Request::is('/') ? 'active' : '' }}" href="{{ url('/') }}">Главная</a>
                         </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link {{ Request::is('contacts') ? 'active' : '' }}"
-                                href="{{ route('contacts') }}">Контакты</a>
-                        </li>
+                        @include('layouts.part.pages')
                         <li class="nav-item">
                             <a class="nav-link {{ Request::is('vpn') ? 'active' : '' }}"
                                 href="{{ route('vpn') }}">Услуги</a>
@@ -98,10 +94,10 @@
                                     Выйти
                                 </a>
                                 <a class="dropdown-item" href="{{ route('home') }}">Личный кабинет</a>
-                                @if (checkPermission(['admin']))
+                                {{--   @if (checkPermission(['admin'])) --}}
                                 <a class="dropdown-item" href="{{ route('admin.index') }}">Админко</a>
                                 <a class="dropdown-item" href="#">ЛК юр. лица</a>
-                                @endif
+                                {{--   @endif --}}
 
 
                                 <form id="logout-form" action="{{ route('user.logout') }}" method="POST"
@@ -111,7 +107,7 @@
                             </div>
                         </li>
                         @endguest
-                        <li class="nav-item">
+                        <li class="nav-item" id="top-basket">
                             <a class="nav-link @if ($positions) text-success @endif" href="{{ route('basket.index') }}">
                                 Корзина
                                 @if ($positions) ({{ $positions }}) @endif
@@ -128,14 +124,7 @@
         </main>
     </div>
 </body>
-<!--<script type="text/javascript" src="https://vk.com/js/api/openapi.js?159"></script>
 
-VK Widget 
-<div id="vk_community_messages"></div>
-<script type="text/javascript">
-VK.Widgets.CommunityMessages("vk_community_messages", 173224258, {tooltipButtonText: "Есть вопрос?"});
-</script>
--->
 
 
 @stack('scripts')

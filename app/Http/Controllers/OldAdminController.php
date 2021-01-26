@@ -1,12 +1,12 @@
 <?php
 
-namespace BoostNet\Http\Controllers;
+namespace App\Http\Controllers;
 
-use BoostNet\Account;
-use BoostNet\Org;
-use BoostNet\Server;
-use BoostNet\Tarif;
-use BoostNet\User;
+use App\Account;
+use App\Org;
+use App\Server;
+use App\Tarif;
+use App\User;
 use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;

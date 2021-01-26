@@ -1,13 +1,15 @@
 <?php
 
-namespace BoostNet\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use BoostNet\Result;
+use App\Result;
+
 class SpeedTestController extends Controller
 {
-    public function emptyResponse(){
-        header( "HTTP/1.1 200 OK" );
+    public function emptyResponse()
+    {
+        header("HTTP/1.1 200 OK");
         header('Access-Control-Allow-Origin: *');
         header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
         header("Cache-Control: post-check=0, pre-check=0", false);
@@ -15,20 +17,22 @@ class SpeedTestController extends Controller
         header("Connection: keep-alive");
         echo '';
     }
-    public function result(Request $request){
+    public function result(Request $request)
+    {
         if ($request->isMethod('post')) {
-        $ip=($_SERVER['REMOTE_ADDR']);
-        $ispinfo=($request["ispinfo"]);
-        $j_server_id = json_decode($request["extra"]);
-        $server_id=$j_server_id->{'server_id'};
-        $ua=($_SERVER['HTTP_USER_AGENT']);
-        $lang=""; if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) $lang=($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-        $dl=($request["dl"]);
-        $ul=($request["ul"]);
-        $ping=($request["ping"]);
-        $jitter=($request["jitter"]);
-       
-        /*
+            $ip = ($_SERVER['REMOTE_ADDR']);
+            $ispinfo = ($request["ispinfo"]);
+            $j_server_id = json_decode($request["extra"]);
+            $server_id = $j_server_id->{'server_id'};
+            $ua = ($_SERVER['HTTP_USER_AGENT']);
+            $lang = "";
+            if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) $lang = ($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+            $dl = ($request["dl"]);
+            $ul = ($request["ul"]);
+            $ping = ($request["ping"]);
+            $jitter = ($request["jitter"]);
+
+            /*
         if($redact_ip_addresses){
             $ip="0.0.0.0";
             $ipv4_regex='/(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/';
@@ -42,22 +46,23 @@ class SpeedTestController extends Controller
             $log=preg_replace($hostname_regex,"\"hostname\":\"REDACTED\"",$log);
         }
         */
-        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0, s-maxage=0');
-        header('Cache-Control: post-check=0, pre-check=0', false);
-        header('Pragma: no-cache');
-                    Result::unguard();
-                    $result = Result::create([
-                        'user_id' => "0",
-                        'server_id' => $server_id,
-                        'ping' => $ping,
-                        'jitter' => $jitter,
-                        'download' => $dl,
-                        'upload' => $ul,
-                    ]);
-                    Result::reguard();
+            header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0, s-maxage=0');
+            header('Cache-Control: post-check=0, pre-check=0', false);
+            header('Pragma: no-cache');
+            Result::unguard();
+            $result = Result::create([
+                'user_id' => "0",
+                'server_id' => $server_id,
+                'ping' => $ping,
+                'jitter' => $jitter,
+                'download' => $dl,
+                'upload' => $ul,
+            ]);
+            Result::reguard();
+        }
     }
-    }
-    public function getip(){
+    public function getip()
+    {
         /*
             This script detects the client's IP address and fetches ISP info from ipinfo.io/
             Output from this script is a JSON string composed of 2 objects: a string called processedString which contains the combined IP, ISP, Contry and distance as it can be presented to the user; and an object called rawIspInfo which contains the raw data from ipinfo.io (will be empty if isp detection is disabled).
@@ -66,7 +71,7 @@ class SpeedTestController extends Controller
         error_reporting(0);
         $ip = "";
         header('Content-Type: application/json; charset=utf-8');
-        if(isset($_GET["cors"])){
+        if (isset($_GET["cors"])) {
             header('Access-Control-Allow-Origin: *');
             header('Access-Control-Allow-Methods: GET, POST');
         }
@@ -83,9 +88,9 @@ class SpeedTestController extends Controller
         } else {
             $ip = $_SERVER['REMOTE_ADDR'];
         }
-        
+
         $ip = preg_replace("/^::ffff:/", "", $ip);
-        
+
         if ($ip == "::1") { // ::1/128 is the only localhost ipv6 address. there are no others, no need to strpos this
             echo json_encode(['processedString' => $ip . " - localhost IPv6 access", 'rawIspInfo' => ""]);
             die();
@@ -114,7 +119,7 @@ class SpeedTestController extends Controller
             echo json_encode(['processedString' => $ip . " - link-local IPv4 access", 'rawIspInfo' => ""]);
             die();
         }
-        
+
         /**
          * Optimized algorithm from http://www.codexworld.com
          *
@@ -125,58 +130,60 @@ class SpeedTestController extends Controller
          *
          * @return float [km]
          */
-        function distance($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo) {
+        function distance($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo)
+        {
             $rad = M_PI / 180;
             $theta = $longitudeFrom - $longitudeTo;
             $dist = sin($latitudeFrom * $rad) * sin($latitudeTo * $rad) + cos($latitudeFrom * $rad) * cos($latitudeTo * $rad) * cos($theta * $rad);
             return acos($dist) / $rad * 60 * 1.853;
         }
-        function getIpInfoTokenString(){
-            $apikeyFile="getIP_ipInfo_apikey.php";
-            if(!file_exists($apikeyFile)) return "";
+        function getIpInfoTokenString()
+        {
+            $apikeyFile = "getIP_ipInfo_apikey.php";
+            if (!file_exists($apikeyFile)) return "";
             require $apikeyFile;
-            if(empty($IPINFO_APIKEY)) return "";
-            return "?token=".$IPINFO_APIKEY;
+            if (empty($IPINFO_APIKEY)) return "";
+            return "?token=" . $IPINFO_APIKEY;
         }
         if (isset($_GET["isp"])) {
             $isp = "";
-            $rawIspInfo=null;
+            $rawIspInfo = null;
             try {
-                $json = file_get_contents("https://ipinfo.io/" . $ip . "/json".getIpInfoTokenString());
+                $json = file_get_contents("https://ipinfo.io/" . $ip . "/json" . getIpInfoTokenString());
                 $details = json_decode($json, true);
-                $rawIspInfo=$details;
-                if (array_key_exists("org", $details)){
+                $rawIspInfo = $details;
+                if (array_key_exists("org", $details)) {
                     $isp .= $details["org"];
-                    $isp=preg_replace("/AS\d{1,}\s/","",$isp); //Remove AS##### from ISP name, if present
-                }else{
+                    $isp = preg_replace("/AS\d{1,}\s/", "", $isp); //Remove AS##### from ISP name, if present
+                } else {
                     $isp .= "Unknown ISP";
                 }
-                if (array_key_exists("country", $details)){
+                if (array_key_exists("country", $details)) {
                     $isp .= ", " . $details["country"];
                 }
                 $clientLoc = NULL;
                 $serverLoc = NULL;
-                if (array_key_exists("loc", $details)){
+                if (array_key_exists("loc", $details)) {
                     $clientLoc = $details["loc"];
                 }
                 if (isset($_GET["distance"])) {
                     if ($clientLoc) {
-                        $locFile="getIP_serverLocation.php";
-                        $serverLoc=null;
-                        if(file_exists($locFile)){
+                        $locFile = "getIP_serverLocation.php";
+                        $serverLoc = null;
+                        if (file_exists($locFile)) {
                             require $locFile;
-                        }else{
-                            $json = file_get_contents("https://ipinfo.io/json".getIpInfoTokenString());
+                        } else {
+                            $json = file_get_contents("https://ipinfo.io/json" . getIpInfoTokenString());
                             $details = json_decode($json, true);
-                            if (array_key_exists("loc", $details)){
+                            if (array_key_exists("loc", $details)) {
                                 $serverLoc = $details["loc"];
                             }
-                            if($serverLoc){
-                                $lf=fopen($locFile,"w");
-                                fwrite($lf,chr(60)."?php\n");
-                                fwrite($lf,'$serverLoc="'.addslashes($serverLoc).'";');
-                                fwrite($lf,"\n");
-                                fwrite($lf,"?".chr(62));
+                            if ($serverLoc) {
+                                $lf = fopen($locFile, "w");
+                                fwrite($lf, chr(60) . "?php\n");
+                                fwrite($lf, '$serverLoc="' . addslashes($serverLoc) . '";');
+                                fwrite($lf, "\n");
+                                fwrite($lf, "?" . chr(62));
                                 fclose($lf);
                             }
                         }
@@ -191,14 +198,13 @@ class SpeedTestController extends Controller
                                     if ($dist < 15)
                                         $dist = "<15";
                                     $isp .= " (" . $dist . " mi)";
-                                }else if ($_GET["distance"] == "km") {
+                                } else if ($_GET["distance"] == "km") {
                                     $dist = round($dist, -1);
                                     if ($dist < 20)
                                         $dist = "<20";
                                     $isp .= " (" . $dist . " km)";
                                 }
                             } catch (Exception $e) {
-                                
                             }
                         }
                     }
@@ -210,11 +216,10 @@ class SpeedTestController extends Controller
         } else {
             echo json_encode(['processedString' => $ip, 'rawIspInfo' => ""]);
         }
-
-        
     }
 
-    public function garbage(Request $request){
+    public function garbage(Request $request)
+    {
         @ini_set('zlib.output_compression', 'Off');
         @ini_set('output_buffering', 'Off');
         @ini_set('output_handler', '');
@@ -227,7 +232,7 @@ class SpeedTestController extends Controller
         header('Cache-Control: post-check=0, pre-check=0', false);
         header('Pragma: no-cache');
 
-        $data=openssl_random_pseudo_bytes(1048576);
+        $data = openssl_random_pseudo_bytes(1048576);
 
         $chunks = $request->ckSize ? intval($request->ckSize) : 4;
 

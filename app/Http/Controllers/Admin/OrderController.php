@@ -1,10 +1,10 @@
 <?php
 
-namespace BoostNet\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin;
 
-use BoostNet\Models\Order;
+use App\Models\Order;
 use Illuminate\Http\Request;
-use BoostNet\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 
 class OrderController extends Controller
 {
